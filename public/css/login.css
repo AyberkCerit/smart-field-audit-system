@@ -1,0 +1,31 @@
+body {
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+.canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+.glass-panel {
+    background: rgba(38, 38, 38, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.glow-button {
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(27, 95, 197, 0.3);
+}
+.glow-button:hover {
+    box-shadow: 0 0 25px rgba(31, 201, 221, 0.5);
+    transform: translateY(-1px);
+}
+
+/* Custom Scrollbar for form containers */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #1b5fc5 transparent;
+}
