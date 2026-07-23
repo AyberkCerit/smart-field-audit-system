@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -18,9 +19,10 @@ class UserController extends Controller
         return view('users.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        User::create($request->all());
+        $validated = $request->validated();
+        User::create($validated);
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
@@ -34,9 +36,17 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $user->update($request->all());
+        $validated = $request->validated();
+        
+        // If password is provided, it will be hashed by the model cast.
+        // If not provided, we remove it from the array so it's not updated.
+        if (empty($validated['password'])) {
+            unset($validated['password']);
+        }
+        
+        $user->update($validated);
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 

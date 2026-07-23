@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 
 class TaskController extends Controller
 {
     public function index()
     {
-        $tasks = Task::all();
+        $tasks = Task::with(['auditPoint', 'assignedUser', 'manager'])->get();
         return view('tasks.index', compact('tasks'));
     }
 
@@ -18,14 +19,15 @@ class TaskController extends Controller
         return view('tasks.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        Task::create($request->all());
+        Task::create($request->validated());
         return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
 
     public function show(Task $task)
     {
+        // $task->load(['auditPoint', 'assignedUser', 'manager']);
         return view('tasks.show', compact('task'));
     }
 
@@ -34,9 +36,9 @@ class TaskController extends Controller
         return view('tasks.edit', compact('task'));
     }
 
-    public function update(Request $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
-        $task->update($request->all());
+        $task->update($request->validated());
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
     }
 

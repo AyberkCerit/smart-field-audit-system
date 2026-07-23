@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\AuditPoint;
+use App\Http\Requests\StoreAuditPointRequest;
+use App\Http\Requests\UpdateAuditPointRequest;
 
 class AuditPointController extends Controller
 {
@@ -18,9 +19,9 @@ class AuditPointController extends Controller
         return view('audit-points.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreAuditPointRequest $request)
     {
-        AuditPoint::create($request->all());
+        AuditPoint::create($request->validated());
         return redirect()->route('audit-points.index')->with('success', 'Audit point created successfully.');
     }
 
@@ -34,9 +35,9 @@ class AuditPointController extends Controller
         return view('audit-points.edit', compact('auditPoint'));
     }
 
-    public function update(Request $request, AuditPoint $auditPoint)
+    public function update(UpdateAuditPointRequest $request, AuditPoint $auditPoint)
     {
-        $auditPoint->update($request->all());
+        $auditPoint->update($request->validated());
         return redirect()->route('audit-points.index')->with('success', 'Audit point updated successfully.');
     }
 
