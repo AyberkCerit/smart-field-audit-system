@@ -1,0 +1,47 @@
+/* Custom Scrollbar for Tasks */
+.tasks-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+.tasks-scroll::-webkit-scrollbar-track {
+    background: rgba(23, 23, 23, 0.5); 
+}
+.tasks-scroll::-webkit-scrollbar-thumb {
+    background: rgba(27, 95, 197, 0.3); 
+    border-radius: 10px;
+}
+.tasks-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(27, 95, 197, 0.5); 
+}
+
+/* Pagination Overrides for Premium Dark Mode */
+nav[role="navigation"] {
+    margin-top: 1.5rem;
+}
+
+nav[role="navigation"] p {
+    color: #666666 !important;
+}
+
+/* Pagination Links */
+nav[role="navigation"] span.relative.inline-flex,
+nav[role="navigation"] a.relative.inline-flex {
+    background-color: #262626 !important;
+    border-color: rgba(102, 102, 102, 0.3) !important;
+    color: #dedede !important;
+    transition: all 0.3s ease;
+}
+
+nav[role="navigation"] a.relative.inline-flex:hover {
+    background-color: rgba(27, 95, 197, 0.2) !important;
+    border-color: rgba(27, 95, 197, 0.4) !important;
+    color: #1fc9dd !important;
+    z-index: 10;
+}
+
+/* Active Page */
+nav[role="navigation"] span[aria-current="page"] > span {
+    background-color: #1b5fc5 !important;
+    border-color: #1b5fc5 !important;
+    color: white !important;
+    box-shadow: 0 0 15px rgba(27, 95, 197, 0.4);
+}

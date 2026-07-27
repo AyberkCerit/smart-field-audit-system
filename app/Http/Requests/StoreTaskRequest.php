@@ -14,14 +14,13 @@ class StoreTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|string',
-            'priority' => 'required|string',
-            'audit_point_id' => 'required|exists:audit_points,id',
-            'assigned_to' => 'nullable|exists:users,id',
-            'assigned_manager' => 'nullable|exists:users,id',
-            'due_date' => 'nullable|date',
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'priority' => ['required', 'in:low,medium,high'],
+            'latitude' => ['required', 'numeric'],
+            'longitude' => ['required', 'numeric'],
+            'due_date' => ['nullable', 'date'],
+            'attachment' => ['nullable', 'file', 'mimes:jpeg,png,jpg,pdf', 'max:10240'],
         ];
     }
 }

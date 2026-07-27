@@ -10,7 +10,7 @@ class AuditPointController extends Controller
 {
     public function index()
     {
-        $auditPoints = AuditPoint::all();
+        $auditPoints = AuditPoint::paginate(15);
         return view('audit-points.index', compact('auditPoints'));
     }
 

@@ -7,16 +7,11 @@
 
         <title>{{ config('app.name', 'SahaDenetim Dashboard') }}</title>
 
-        <!-- Tailwind CSS CDN -->
-        <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-
-        <!-- Tailwind Config -->
-        <script src="{{ asset('js/tailwind-config.js') }}"></script>
-        
-        <!-- Fonts -->
+        <!-- Fonts & Icons -->
         <link href="https://fonts.googleapis.com" rel="preconnect">
         <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -22,6 +22,16 @@ tailwind.config = {
                 '2xl': '2rem',
                 '3xl': '3.5rem',
             },
+            keyframes: {
+                expand: {
+                    '0%': { clipPath: 'inset(0 50% 0 50%)' },
+                    '99%': { clipPath: 'inset(0 0 0 0)' },
+                    '100%': { clipPath: 'none' },
+                }
+            },
+            animation: {
+                expand: 'expand 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            },
         },
     },
 };

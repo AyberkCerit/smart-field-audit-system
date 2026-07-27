@@ -1,4 +1,10 @@
-/* Custom Filter for Map to fit dark theme */
-.dark-map-filter {
-    filter: invert(90%) hue-rotate(180deg) brightness(80%) contrast(150%);
+/* Harita kontrollerinin koyu temaya uyumu */
+.leaflet-control-zoom a { background-color: #262626 !important; color: #dedede !important; border-color: #666666 !important; }
+.leaflet-popup-content-wrapper { background-color: #262626; color: #dedede; border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.1); }
+.leaflet-popup-tip { background-color: #262626; }
+.leaflet-container { background: #1a1a1a; } /* Yüklenirken arka plan */
+
+/* Haritayı biraz daha aydınlık ve okunabilir yapmak için invert (tersine çevirme) tekniği kullanıldı */
+.leaflet-tile-pane {
+    filter: invert(100%) hue-rotate(180deg) brightness(110%) contrast(90%);
 }
