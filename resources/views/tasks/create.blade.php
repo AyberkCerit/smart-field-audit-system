@@ -128,9 +128,14 @@
                     <a href="{{ route('tasks.index') }}" class="px-6 py-3 rounded-xl text-sm font-semibold text-text hover:text-white hover:bg-white/5 transition-all">
                         İptal
                     </a>
-                    <button type="submit" class="flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-bold bg-primary hover:bg-primary/80 text-white shadow-[0_0_15px_rgba(27,95,197,0.4)] hover:shadow-[0_0_20px_rgba(27,95,197,0.6)] hover:-translate-y-1 transition-all duration-300">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
-                        Görevi Oluştur
+                    <button type="button" id="holdToConfirmBtn" class="relative overflow-hidden flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-bold border-2 border-primary/40 bg-background/50 text-white shadow-lg hover:border-primary/80 hover:shadow-[0_0_20px_rgba(27,95,197,0.3)] transition-all duration-300 select-none cursor-pointer group">
+                        <!-- Dolum Efekti (Progress) -->
+                        <div id="holdProgress" class="absolute left-0 top-0 bottom-0 w-0 bg-primary/90"></div>
+                        <!-- İçerik -->
+                        <span class="relative z-10 flex items-center gap-2 transition-transform duration-200" id="holdContent">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                            <span id="holdText">Oluşturmak İçin Basılı Tut</span>
+                        </span>
                     </button>
                 </div>
             </form>
@@ -138,6 +143,7 @@
     </div>
 
     @push('scripts')
+        <script defer src="{{ asset('js/hold-to-confirm.js') }}?v={{ time() }}"></script>
         <script defer src="{{ asset('js/map-helper.js') }}?v={{ time() }}"></script>
         <script defer src="{{ asset('js/task-map.js') }}?v={{ time() }}"></script>
     @endpush

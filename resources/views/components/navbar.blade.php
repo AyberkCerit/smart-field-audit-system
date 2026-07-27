@@ -4,14 +4,14 @@
     <!-- Navbar İçeriği: Mat arka plan -->
     <header class="w-full max-w-6xl h-16 bg-primary rounded-2xl flex items-center justify-between px-6 shadow-md pointer-events-auto transition-all duration-300 text-white animate-expand">
         
-        <div class="flex items-center gap-3 cursor-pointer group">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 cursor-pointer group">
             <!-- Logo İkonu -->
             <div class="w-9 h-9 rounded-xl bg-white/10 border border-white/30 flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(0,0,0,0.1)] text-sm tracking-widest transition-all group-hover:scale-105">
                 SD
             </div>
             <!-- Marka Adı -->
             <span class="text-xl font-bold text-white tracking-wide group-hover:opacity-80 transition-opacity">SahaDenetim</span>
-        </div>
+        </a>
 
         <nav class="hidden md:flex items-center gap-2">
             <!-- Tasks Butonu (Tüm Roller) -->
@@ -21,14 +21,14 @@
             </a>
             
             <!-- Map Butonu (Tüm Roller) -->
-            <a href="#" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white hover:bg-white/10 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)] transition-all">
-                <svg class="w-5 h-5 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-                Map
+            <a href="{{ route('audit-points.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 {{ request()->routeIs('audit-points.index') ? 'text-white bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-white hover:bg-white/10 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]' }}">
+                <svg class="w-5 h-5 {{ request()->routeIs('audit-points.index') ? '' : 'opacity-90' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                Harita
             </a>
             
             <!-- Activity Log Butonu (Tüm Roller) -->
-            <a href="#" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white hover:bg-white/10 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)] transition-all">
-                <svg class="w-5 h-5 opacity-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <a href="{{ route('activity-logs.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 {{ request()->routeIs('activity-logs.index') ? 'text-white bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-white hover:bg-white/10 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]' }}">
+                <svg class="w-5 h-5 {{ request()->routeIs('activity-logs.index') ? '' : 'opacity-90' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 Activity Log
             </a>
 

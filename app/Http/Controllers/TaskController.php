@@ -50,7 +50,7 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        // $task->load(['auditPoint', 'assignedUser', 'manager']);
+        $task->load(['auditPoint', 'assignedUser', 'manager']);
         return view('tasks.show', compact('task'));
     }
 
@@ -67,7 +67,26 @@ class TaskController extends Controller
 
     public function destroy(Task $task)
     {
+        if ($task->auditPoint) {
+            $task->auditPoint->delete();
+        }
         $task->delete();
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
+    }
+
+    public function attachment(Task $task, \Spatie\MediaLibrary\MediaCollections\Models\Media $media)
+    {
+        abort_if($media->model_id !== $task->id, 403);
+        
+        return response()->stream(function () use ($media) {
+            $stream = $media->stream();
+            fpassthru($stream);
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
+        }, 200, [
+            'Content-Type' => $media->mime_type,
+            'Content-Disposition' => 'inline; filename="'.$media->file_name.'"',
+        ]);
     }
 }

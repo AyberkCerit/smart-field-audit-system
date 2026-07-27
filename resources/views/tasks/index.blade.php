@@ -14,8 +14,8 @@
                 <p class="text-secondary mt-1">Sahadaki tüm görevleri buradan yönetebilir ve takip edebilirsiniz.</p>
             </div>
             @hasanyrole('admin|manager')
-            <a href="{{ route('tasks.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-primary hover:bg-primary/80 text-white shadow-[0_0_15px_rgba(27,95,197,0.4)] hover:shadow-[0_0_20px_rgba(27,95,197,0.6)] hover:-translate-y-1 transition-all duration-300">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+            <a href="{{ route('tasks.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-[#a4d756] hover:bg-[#91c342] text-gray-900 shadow-[0_0_15px_rgba(164,215,86,0.4)] hover:shadow-[0_0_20px_rgba(164,215,86,0.6)] hover:-translate-y-1 transition-all duration-300">
+                <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                 Yeni Görev Oluştur
             </a>
             @endhasanyrole
@@ -37,16 +37,16 @@
         <!-- Tasks Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($tasks as $task)
-                <div class="bg-card-dark rounded-2xl border border-secondary/30 p-5 flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:border-primary/40 hover:-translate-y-1 duration-300 group">
+                <a href="{{ route('tasks.show', $task) }}" class="block bg-card-dark rounded-2xl border border-secondary/30 p-5 flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:border-primary/40 hover:-translate-y-1 duration-300 group cursor-pointer">
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex flex-wrap gap-2">
                             <!-- Priority Badge -->
                             @if($task->priority === 'high')
                                 <span class="bg-red-500/20 text-red-400 border border-red-500/20 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">Acil</span>
                             @elseif($task->priority === 'normal')
-                                <span class="bg-accent/20 text-accent border border-accent/20 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">Normal</span>
+                                <span class="bg-orange-500/20 text-orange-400 border border-orange-500/20 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">Normal</span>
                             @else
-                                <span class="bg-secondary/20 text-text border border-secondary/30 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">{{ $task->priority }}</span>
+                                <span class="bg-green-500/20 text-green-400 border border-green-500/20 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider">Düşük</span>
                             @endif
 
                             <!-- Status Badge -->
@@ -56,10 +56,7 @@
                                 <span class="bg-[#e4ba00]/20 text-[#e4ba00] border border-[#e4ba00]/30 rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider shadow-[0_0_5px_rgba(228,186,0,0.3)]">Bekliyor</span>
                             @endif
                         </div>
-                        <!-- Action Menu Icon -->
-                        <button class="text-secondary hover:text-white transition-colors">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
-                        </button>
+
                     </div>
 
                     <h3 class="text-lg font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-accent group-hover:to-primary transition-colors line-clamp-1" title="{{ $task->title }}">
@@ -98,7 +95,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             @empty
                 <div class="col-span-full flex flex-col items-center justify-center bg-card-dark rounded-2xl border border-secondary/30 p-12 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
                     <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
