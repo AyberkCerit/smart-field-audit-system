@@ -22,6 +22,8 @@ class UpdateTaskRequest extends FormRequest
             'assigned_to' => 'nullable|exists:users,id',
             'assigned_manager' => 'nullable|exists:users,id',
             'due_date' => 'nullable|date',
+            'latitude' => 'sometimes|numeric',
+            'longitude' => 'sometimes|numeric',
         ];
     }
 }

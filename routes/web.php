@@ -22,11 +22,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/tasks/{task}/attachment/{media}', [TaskController::class, 'attachment'])->name('tasks.attachment');
-    Route::resource('tasks', TaskController::class);
-    Route::resource('audit-points', AuditPointController::class);
-    Route::resource('users', UserController::class);
     
+    // Herkesin erişebileceği sayfalar (İlgili filtrelemeler controller/policy'de yapılmalı)
+    Route::resource('tasks', TaskController::class)->only(['index', 'show', 'edit', 'update']);
+    Route::resource('audit-points', AuditPointController::class)->only(['index', 'show']);
     Route::get('/activity-logs', [\App\Http\Controllers\ActivityLogController::class, 'index'])->name('activity-logs.index');
+
+    // Sadece Admin ve Manager
+    Route::middleware(['role:admin|manager'])->group(function () {
+        Route::resource('tasks', TaskController::class)->only(['create', 'store', 'destroy']);
+        Route::resource('audit-points', AuditPointController::class)->except(['index', 'show']);
+    });
+
+    // Sadece Admin
+    Route::middleware(['role:admin'])->group(function () {
+        Route::resource('users', UserController::class);
+    });
 });
 
 require __DIR__.'/auth.php';

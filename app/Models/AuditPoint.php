@@ -43,4 +43,15 @@ class AuditPoint extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    protected static function booted()
+    {
+        $clearCache = function () {
+            \Illuminate\Support\Facades\Cache::forget('active_audit_points');
+        };
+
+        static::saved($clearCache);
+        static::deleted($clearCache);
+        static::restored($clearCache);
+    }
 }

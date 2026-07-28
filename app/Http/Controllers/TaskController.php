@@ -16,7 +16,8 @@ class TaskController extends Controller
 
     public function create()
     {
-        $users = \App\Models\User::all();
+        // Sadece 'Saha Personeli' (field_personnel) rolüne sahip kullanıcıları getiriyoruz
+        $users = \App\Models\User::role('field_personnel')->get();
         return view('tasks.create', compact('users'));
     }
 
@@ -24,26 +25,28 @@ class TaskController extends Controller
     {
         $data = $request->validated();
 
-        $auditPoint = \App\Models\AuditPoint::create([
-            'name' => $data['title'] . ' (Görev Alanı)',
-            'description' => 'Haritadan görev oluşturulurken otomatik eklendi.',
-            'category' => 'task_specific',
-            'latitude' => $data['latitude'],
-            'longitude' => $data['longitude'],
-            'is_active' => true,
-        ]);
+        \Illuminate\Support\Facades\DB::transaction(function () use ($data, $request) {
+            $auditPoint = \App\Models\AuditPoint::create([
+                'name' => $data['title'] . ' (Görev Alanı)',
+                'description' => 'Haritadan görev oluşturulurken otomatik eklendi.',
+                'category' => 'task_specific',
+                'latitude' => $data['latitude'],
+                'longitude' => $data['longitude'],
+                'is_active' => true,
+            ]);
 
-        unset($data['latitude'], $data['longitude']);
+            unset($data['latitude'], $data['longitude']);
 
-        $data['audit_point_id'] = $auditPoint->id;
-        $data['assigned_manager'] = auth()->id();
-        $data['status'] = 'pending';
-        $task = Task::create($data);
-        
-        if ($request->hasFile('attachment')) {
-            // Spatie MediaLibrary kullanarak S3 (MinIO) sunucusuna yükle
-            $task->addMediaFromRequest('attachment')->toMediaCollection('task_attachments', 's3');
-        }
+            $data['audit_point_id'] = $auditPoint->id;
+            $data['assigned_manager'] = auth()->id();
+            $data['status'] = 'pending';
+            $task = Task::create($data);
+            
+            if ($request->hasFile('attachment')) {
+                // Spatie MediaLibrary kullanarak S3 (MinIO) sunucusuna yükle
+                $task->addMediaFromRequest('attachment')->toMediaCollection('task_attachments', 's3');
+            }
+        });
         
         return redirect()->route('tasks.index')->with('success', 'Görev başarıyla oluşturuldu.');
     }
@@ -61,7 +64,33 @@ class TaskController extends Controller
 
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        $task->update($request->validated());
+        $data = $request->validated();
+        
+        \Illuminate\Support\Facades\DB::transaction(function () use ($data, $task) {
+            // Update AuditPoint if title, lat, or lng are changed
+            if ($task->auditPoint) {
+                $auditData = [];
+                if (isset($data['title'])) {
+                    $auditData['name'] = $data['title'] . ' (Görev Alanı)';
+                }
+                if (isset($data['latitude'])) {
+                    $auditData['latitude'] = $data['latitude'];
+                }
+                if (isset($data['longitude'])) {
+                    $auditData['longitude'] = $data['longitude'];
+                }
+                
+                if (!empty($auditData)) {
+                    $task->auditPoint->update($auditData);
+                }
+            }
+            
+            // Remove lat/lng before updating Task
+            unset($data['latitude'], $data['longitude']);
+            
+            $task->update($data);
+        });
+
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
     }
 

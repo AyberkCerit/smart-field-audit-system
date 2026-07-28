@@ -12,6 +12,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $__start = microtime(true);
+        \Illuminate\Support\Facades\Log::info('Dashboard start');
         $user = auth()->user();
         
         $recentTasks = collect();
@@ -23,7 +25,7 @@ class DashboardController extends Controller
             $cacheKey = 'dashboard_stats_user_' . $user->id;
             
             // Veritabanını yormamak için istatistikleri 5 dakika (300 saniye) boyunca Redis'te önbellekliyoruz
-            $stats = \Illuminate\Support\Facades\Cache::remember($cacheKey, 300, function () use ($user) {
+            $stats = \Illuminate\Support\Facades\Cache::remember($cacheKey, 300, function () use ($user, $__start) {
                 $recentTasks = Task::where('assigned_manager', $user->id)
                     ->orderBy('created_at', 'desc')
                     ->take(3)
@@ -39,7 +41,7 @@ class DashboardController extends Controller
                     ->value('avg_time');
                     
                 $avgResolutionTime = $avgResolutionTimeRaw ? round($avgResolutionTimeRaw, 1) : 0;
-                
+                \Illuminate\Support\Facades\Log::info('Dashboard end', ['duration' => microtime(true) - $__start]);
                 return compact('recentTasks', 'totalSolved', 'avgResolutionTime');
             });
             
