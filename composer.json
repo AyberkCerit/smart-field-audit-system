@@ -12,6 +12,7 @@
         "php": "^8.3",
         "barryvdh/laravel-dompdf": "^3.1",
         "laravel/framework": "^13.8",
+        "laravel/reverb": "*",
         "laravel/scout": "^11.4",
         "laravel/tinker": "^3.0",
         "league/flysystem-aws-s3-v3": "*",
