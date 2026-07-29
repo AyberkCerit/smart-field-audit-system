@@ -26,6 +26,22 @@
             {{ $slot }}
         </main>
 
+        <script src="{{ asset('js/toast.js') }}?v={{ time() }}"></script>
+        @if(session('success'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    if(window.Toast) window.Toast.showSuccess("{{ session('success') }}");
+                });
+            </script>
+        @endif
+        @if(session('error'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    if(window.Toast) window.Toast.showWarning("{{ session('error') }}");
+                });
+            </script>
+        @endif
+        
         @stack('scripts')
     </body>
 </html>

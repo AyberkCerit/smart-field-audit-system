@@ -17,6 +17,7 @@ class UpdateUserRequest extends FormRequest
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $this->route('user')->id,
             'password' => 'nullable|string|min:8',
+            'role' => 'sometimes|required|string|in:field_personnel,manager,admin',
         ];
     }
 }

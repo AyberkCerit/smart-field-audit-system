@@ -23,16 +23,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/tasks/{task}/attachment/{media}', [TaskController::class, 'attachment'])->name('tasks.attachment');
     
-    // Herkesin erişebileceği sayfalar (İlgili filtrelemeler controller/policy'de yapılmalı)
-    Route::resource('tasks', TaskController::class)->only(['index', 'show', 'edit', 'update']);
-    Route::resource('audit-points', AuditPointController::class)->only(['index', 'show']);
-    Route::get('/activity-logs', [\App\Http\Controllers\ActivityLogController::class, 'index'])->name('activity-logs.index');
-
     // Sadece Admin ve Manager
     Route::middleware(['role:admin|manager'])->group(function () {
         Route::resource('tasks', TaskController::class)->only(['create', 'store', 'destroy']);
         Route::resource('audit-points', AuditPointController::class)->except(['index', 'show']);
     });
+
+    // Herkesin erişebileceği sayfalar (İlgili filtrelemeler controller/policy'de yapılmalı)
+    Route::resource('tasks', TaskController::class)->only(['index', 'show', 'edit', 'update']);
+    Route::resource('audit-points', AuditPointController::class)->only(['index', 'show']);
+    Route::get('/activity-logs', [\App\Http\Controllers\ActivityLogController::class, 'index'])->name('activity-logs.index');
 
     // Sadece Admin
     Route::middleware(['role:admin'])->group(function () {

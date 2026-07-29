@@ -23,7 +23,13 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $validated = $request->validated();
-        User::create($validated);
+        
+        $role = $validated['role'];
+        unset($validated['role']);
+        
+        $user = User::create($validated);
+        $user->assignRole($role);
+        
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
@@ -40,6 +46,12 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $validated = $request->validated();
+        
+        if (isset($validated['role'])) {
+            $role = $validated['role'];
+            unset($validated['role']);
+            $user->syncRoles([$role]);
+        }
         
         // If password is provided, it will be hashed by the model cast.
         // If not provided, we remove it from the array so it's not updated.

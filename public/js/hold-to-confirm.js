@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!form.checkValidity()) {
             form.reportValidity();
+            if (window.Toast) {
+                window.Toast.showWarning("Lütfen zorunlu alanları (İsim, E-posta, Şifre) doldurunuz!");
+            }
             return;
         }
 
@@ -32,7 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
             isComplete = true;
             text.innerText = "Gönderiliyor!";
             content.classList.remove('scale-95');
-            btn.classList.add('bg-primary', 'shadow-[0_0_20px_rgba(27,95,197,0.8)]');
+            const bgClass = btn.dataset.bgClass || 'bg-primary';
+            const shadowClass = btn.dataset.shadowClass || 'shadow-[0_0_20px_rgba(27,95,197,0.8)]';
+            btn.classList.add(bgClass, shadowClass);
             btn.style.pointerEvents = 'none';
             
             form.submit();
