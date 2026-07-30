@@ -42,7 +42,7 @@
                 <div class="flex-grow flex items-center justify-center">
                     <div class="text-center">
                         <span class="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-green-400 to-green-600 drop-shadow-lg">{{ $totalSolved }}</span>
-                        <p class="text-sm text-secondary mt-2 font-medium">Total number of completed tasks</p
+                        <p class="text-sm text-secondary mt-2 font-medium">Total number of completed tasks</p>
                     </div>
                 </div>
             </div>

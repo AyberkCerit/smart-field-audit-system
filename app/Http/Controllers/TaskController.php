@@ -8,9 +8,24 @@ use App\Http\Requests\UpdateTaskRequest;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $tasks = Task::with(['auditPoint', 'assignedUser', 'manager'])->paginate(15);
+        $query = Task::with(['auditPoint', 'assignedUser', 'manager']);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $tasks = $query->paginate(15)->withQueryString();
+        
         return view('tasks.index', compact('tasks'));
     }
 
