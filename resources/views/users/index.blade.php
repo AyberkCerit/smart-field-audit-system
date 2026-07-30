@@ -2,29 +2,29 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
-            <!-- Başlık ve Aksiyon Alanı -->
+            <!-- Title and Action Area -->
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold text-white flex items-center gap-2">
                     <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    Kullanıcı Yönetimi
+                    User Management
                 </h2>
                 <a href="{{ route('users.create') }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-[#a4d756] hover:bg-[#91c342] text-gray-900 shadow-[0_0_15px_rgba(164,215,86,0.4)] hover:shadow-[0_0_20px_rgba(164,215,86,0.6)] hover:-translate-y-1 transition-all duration-300">
                     <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-                    Yeni Kullanıcı Ekle
+                    Add New User
                 </a>
             </div>
 
-            <!-- Kullanıcılar Tablosu -->
+            <!-- Users Table -->
             <div class="bg-card-dark rounded-2xl border border-secondary/30 shadow-[0_0_20px_rgba(0,0,0,0.5)] overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-background/80 border-b border-secondary/30 text-secondary text-sm uppercase tracking-wider">
-                                <th class="px-6 py-4 font-semibold">İsim</th>
-                                <th class="px-6 py-4 font-semibold">E-posta</th>
-                                <th class="px-6 py-4 font-semibold">Roller</th>
-                                <th class="px-6 py-4 font-semibold">Kayıt Tarihi</th>
-                                <th class="px-6 py-4 font-semibold text-right">İşlemler</th>
+                                <th class="px-6 py-4 font-semibold">Name</th>
+                                <th class="px-6 py-4 font-semibold">Email</th>
+                                <th class="px-6 py-4 font-semibold">Roles</th>
+                                <th class="px-6 py-4 font-semibold">Registration Date</th>
+                                <th class="px-6 py-4 font-semibold text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-secondary/20">
@@ -46,7 +46,7 @@
                                                     {{ ucfirst($role->name) }}
                                                 </span>
                                             @empty
-                                                <span class="text-secondary text-sm italic">Rol atanmamış</span>
+                                                <span class="text-secondary text-sm italic">No role assigned</span>
                                             @endforelse
                                         </div>
                                     </td>
@@ -55,13 +55,13 @@
                                     </td>
                                     <td class="px-6 py-4 text-right">
                                         <div class="flex justify-end gap-2">
-                                            <a href="{{ route('users.edit', $user) }}" class="p-2 bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-white rounded-lg transition-colors border border-yellow-500/20" title="Düzenle">
+                                            <a href="{{ route('users.edit', $user) }}" class="p-2 bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500 hover:text-white rounded-lg transition-colors border border-yellow-500/20" title="Edit">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                             </a>
-                                            <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">
+                                            <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="p-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition-colors border border-red-500/20" title="Sil">
+                                                <button type="submit" class="p-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition-colors border border-red-500/20" title="Delete">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                                 </button>
                                             </form>
@@ -71,7 +71,7 @@
                             @empty
                                 <tr>
                                     <td colspan="5" class="px-6 py-8 text-center text-secondary">
-                                        Kayıtlı kullanıcı bulunamadı.
+                                        No registered users found.
                                     </td>
                                 </tr>
                             @endforelse

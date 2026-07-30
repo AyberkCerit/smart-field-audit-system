@@ -5,13 +5,13 @@
             <div>
                 <h1 class="text-3xl font-display font-bold text-white flex items-center gap-3">
                     <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Sistem Logları
+                    System Logs
                 </h1>
                 <p class="text-secondary mt-1">
                     @hasanyrole('admin|manager')
-                        Sistemdeki tüm kullanıcıların hareketlerini takip edin.
+                        Track the activities of all users in the system.
                     @else
-                        Sistemdeki son hareketlerinizi buradan takip edebilirsiniz.
+                        You can track your recent activities here.
                     @endhasanyrole
                 </p>
             </div>
@@ -23,10 +23,10 @@
                 <table class="w-full text-left text-sm text-secondary">
                     <thead class="text-xs uppercase bg-background/50 text-white/70 border-b border-secondary/30">
                         <tr>
-                            <th scope="col" class="px-6 py-4">Tarih</th>
-                            <th scope="col" class="px-6 py-4">Kullanıcı</th>
-                            <th scope="col" class="px-6 py-4">Aksiyon</th>
-                            <th scope="col" class="px-6 py-4">Açıklama</th>
+                            <th scope="col" class="px-6 py-4">Date</th>
+                            <th scope="col" class="px-6 py-4">User</th>
+                            <th scope="col" class="px-6 py-4">Action</th>
+                            <th scope="col" class="px-6 py-4">Description</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-secondary/10">
@@ -45,7 +45,7 @@
                                             <span class="font-medium text-white">{{ $log->causer->name }}</span>
                                         </div>
                                     @else
-                                        <span class="text-secondary/50 italic">Sistem</span>
+                                        <span class="text-secondary/50 italic">System</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
@@ -72,7 +72,7 @@
                                 <td colspan="4" class="px-6 py-10 text-center">
                                     <div class="flex flex-col items-center justify-center text-secondary/50">
                                         <svg class="w-12 h-12 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        <p>Henüz herhangi bir log kaydı bulunmuyor.</p>
+                                        <p>No log records found yet.</p>
                                     </div>
                                 </td>
                             </tr>

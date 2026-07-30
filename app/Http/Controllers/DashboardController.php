@@ -20,11 +20,11 @@ class DashboardController extends Controller
         $totalSolved = 0;
         $avgResolutionTime = 0;
 
-        // Yöneticiler (ve admin) için istatistikleri hesapla
+        // Calculate statistics for managers (and admin)
         if ($user->hasAnyRole(['admin', 'manager'])) {
             $cacheKey = 'dashboard_stats_user_' . $user->id;
             
-            // Veritabanını yormamak için istatistikleri 5 dakika (300 saniye) boyunca Redis'te önbellekliyoruz
+            // Cache statistics in Redis for 5 minutes (300 seconds) to reduce database load
             $stats = \Illuminate\Support\Facades\Cache::remember($cacheKey, 300, function () use ($user, $__start) {
                 $recentTasks = Task::where('assigned_manager', $user->id)
                     ->orderBy('created_at', 'desc')
@@ -50,8 +50,8 @@ class DashboardController extends Controller
             $avgResolutionTime = $stats['avgResolutionTime'];
         }
 
-        // Tüm denetim noktalarını (harita pinleri için) getir
-        // Harita verileri anlık değişmediği için 60 dakika (3600 saniye) boyunca Redis'te önbellekliyoruz
+        // Get all audit points (for map pins)
+        // Cache map data in Redis for 60 minutes (3600 seconds) since it doesn't change instantly
         $auditPoints = \Illuminate\Support\Facades\Cache::remember('active_audit_points', 3600, function () {
             return \App\Models\AuditPoint::where('is_active', true)->get();
         });

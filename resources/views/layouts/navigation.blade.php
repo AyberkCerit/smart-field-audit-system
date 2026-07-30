@@ -18,7 +18,7 @@
 
                     @hasrole('admin')
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
-                        {{ __('Kullanıcılar') }}
+                        {{ __('Users') }}
                     </x-nav-link>
                     @endhasrole
                 </div>
@@ -79,7 +79,7 @@
 
             @hasrole('admin')
             <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
-                {{ __('Kullanıcılar') }}
+                {{ __('Users') }}
             </x-responsive-nav-link>
             @endhasrole
         </div>

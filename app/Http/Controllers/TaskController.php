@@ -16,7 +16,7 @@ class TaskController extends Controller
 
     public function create()
     {
-        // Sadece 'Saha Personeli' (field_personnel) rolüne sahip kullanıcıları getiriyoruz
+        // Only fetch users with 'field_personnel' role
         $users = \App\Models\User::role('field_personnel')->get();
         return view('tasks.create', compact('users'));
     }
@@ -27,8 +27,8 @@ class TaskController extends Controller
 
         \Illuminate\Support\Facades\DB::transaction(function () use ($data, $request) {
             $auditPoint = \App\Models\AuditPoint::create([
-                'name' => $data['title'] . ' (Görev Alanı)',
-                'description' => 'Haritadan görev oluşturulurken otomatik eklendi.',
+                'name' => $data['title'] . ' (Task Area)',
+                'description' => 'Automatically added when creating a task from the map.',
                 'category' => 'task_specific',
                 'latitude' => $data['latitude'],
                 'longitude' => $data['longitude'],
@@ -43,12 +43,12 @@ class TaskController extends Controller
             $task = Task::create($data);
             
             if ($request->hasFile('attachment')) {
-                // Spatie MediaLibrary kullanarak S3 (MinIO) sunucusuna yükle
+                // Upload to S3 (MinIO) using Spatie MediaLibrary
                 $task->addMediaFromRequest('attachment')->toMediaCollection('task_attachments', 's3');
             }
         });
         
-        return redirect()->route('tasks.index')->with('success', 'Görev başarıyla oluşturuldu.');
+        return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
 
     public function show(Task $task)

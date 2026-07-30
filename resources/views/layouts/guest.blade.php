@@ -5,7 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    <title>{{ config('app.name', 'Saha Denetim Sistemi') }}</title>
+    <title>{{ config('app.name', 'Field Audit System') }}</title>
     
     <!-- Tailwind CDN with Plugins -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
@@ -57,7 +57,7 @@
   </svg>
 </div>
                 <p class="text-xl md:text-2xl text-accent font-medium tracking-wide opacity-90 max-w-md italic">
-                    for manage your field
+                    to manage your field
                 </p>
                 <div class="mt-12 flex gap-4">
                     <div class="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10 backdrop-blur-sm">

@@ -21,7 +21,7 @@
         <!-- Navbar Container -->
         <x-navbar />
 
-        <!-- İçerik Alanı -->
+        <!-- Content Area -->
         <main class="w-full max-w-7xl mx-auto px-6 pt-32 pb-12">
             {{ $slot }}
         </main>
