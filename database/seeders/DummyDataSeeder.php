@@ -35,7 +35,7 @@ class DummyDataSeeder extends Seeder
         $manager = User::firstOrCreate(
             ['email' => 'manager@example.com'],
             [
-                'name' => 'Yönetici User',
+                'name' => 'Manager User',
                 'password' => Hash::make('password'),
             ]
         );
@@ -47,7 +47,7 @@ class DummyDataSeeder extends Seeder
         $fieldPersonnel = User::firstOrCreate(
             ['email' => 'personnel@example.com'],
             [
-                'name' => 'Saha Personeli',
+                'name' => 'Field Personnel',
                 'password' => Hash::make('password'),
             ]
         );
@@ -59,10 +59,10 @@ class DummyDataSeeder extends Seeder
         if (AuditPoint::count() == 0) {
             for ($i = 1; $i <= 5; $i++) {
                 AuditPoint::create([
-                    'name' => 'Denetim Noktası ' . $i,
-                    'description' => 'Test denetim noktası açıklaması ' . $i,
+                    'name' => 'Audit Point ' . $i,
+                    'description' => 'Test audit point description ' . $i,
                     'category' => 'test',
-                    'address' => 'Örnek Adres ' . $i,
+                    'address' => 'Sample Address ' . $i,
                     'latitude' => 41.0082 + ($i * 0.01),
                     'longitude' => 28.9784 + ($i * 0.01),
                     'is_active' => true,
@@ -76,8 +76,8 @@ class DummyDataSeeder extends Seeder
             
             foreach ($auditPoints as $index => $auditPoint) {
                 Task::create([
-                    'title' => 'Görev ' . ($index + 1),
-                    'description' => 'Bu görev, ' . $auditPoint->name . ' için otomatik oluşturuldu.',
+                    'title' => 'Task ' . ($index + 1),
+                    'description' => 'This task was automatically created for ' . $auditPoint->name . '.',
                     'priority' => 'medium',
                     'audit_point_id' => $auditPoint->id,
                     'assigned_to' => $fieldPersonnel->id,

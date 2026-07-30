@@ -22,7 +22,7 @@ class Task extends Model implements HasMedia
             ->logOnly(['status', 'assigned_to', 'priority', 'due_date'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->setDescriptionForEvent(fn(string $eventName) => "Görev {$eventName}");
+            ->setDescriptionForEvent(fn(string $eventName) => "Task {$eventName}");
     }
 
     protected $fillable = [

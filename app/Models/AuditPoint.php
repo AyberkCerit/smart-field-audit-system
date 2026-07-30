@@ -19,7 +19,7 @@ class AuditPoint extends Model
             ->logFillable()
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs()
-            ->setDescriptionForEvent(fn(string $eventName) => "Nokta {$eventName}");
+            ->setDescriptionForEvent(fn(string $eventName) => "Point {$eventName}");
     }
 
     protected $fillable = [

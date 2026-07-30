@@ -20,19 +20,19 @@ class DatabaseSeeder extends Seeder
 
         // 2. Kullanıcıları oluştur
         $admin = User::firstOrCreate(['email' => 'admin@sahadenetim.com'], [
-            'name' => 'Admin Kullanıcısı',
+            'name' => 'Admin User',
             'password' => bcrypt('password'),
         ]);
         $admin->assignRole($adminRole);
 
         $manager = User::firstOrCreate(['email' => 'manager@sahadenetim.com'], [
-            'name' => 'Bölge Yöneticisi',
+            'name' => 'Regional Manager',
             'password' => bcrypt('password'),
         ]);
         $manager->assignRole($managerRole);
 
         $personnel = User::firstOrCreate(['email' => 'personel@sahadenetim.com'], [
-            'name' => 'Saha Personeli',
+            'name' => 'Field Personnel',
             'password' => bcrypt('password'),
         ]);
         $personnel->assignRole($personnelRole);
@@ -42,29 +42,29 @@ class DatabaseSeeder extends Seeder
 
         // 3. Denetim Noktaları Oluştur
         $point1 = \App\Models\AuditPoint::create([
-            'name' => 'Merkez Depo Denetimi',
-            'description' => 'Aylık rutin merkez depo kontrol noktası',
+            'name' => 'Central Warehouse Audit',
+            'description' => 'Monthly routine central warehouse checkpoint',
             'category' => 'warehouse',
             'latitude' => 41.0082,
             'longitude' => 28.9784,
-            'address' => 'İstanbul Merkez',
+            'address' => 'Istanbul Central',
             'is_active' => true,
         ]);
 
         $point2 = \App\Models\AuditPoint::create([
-            'name' => 'Şube 1 Elektrik Panosu',
-            'description' => 'Şube 1 ana şalter ve elektrik kontrolü',
+            'name' => 'Branch 1 Electrical Panel',
+            'description' => 'Branch 1 main switch and electrical check',
             'category' => 'electrical',
             'latitude' => 41.0200,
             'longitude' => 29.0000,
-            'address' => 'İstanbul Şube 1',
+            'address' => 'Istanbul Branch 1',
             'is_active' => true,
         ]);
 
         // 4. Görevler Oluştur
         \App\Models\Task::create([
-            'title' => 'Depo Sayımı',
-            'description' => 'Bölüm A stoklarının sayılarak sisteme girilmesi.',
+            'title' => 'Warehouse Inventory',
+            'description' => 'Counting Section A stock and entering into the system.',
             'status' => 'pending',
             'priority' => 'high',
             'audit_point_id' => $point1->id,
@@ -74,8 +74,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Task::create([
-            'title' => 'Pano Bakımı',
-            'description' => 'Elektrik panosunun termal kamera ile ölçümü.',
+            'title' => 'Panel Maintenance',
+            'description' => 'Thermal camera measurement of electrical panel.',
             'status' => 'completed',
             'priority' => 'normal',
             'audit_point_id' => $point2->id,
