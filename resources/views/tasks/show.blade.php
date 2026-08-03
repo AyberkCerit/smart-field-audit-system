@@ -17,6 +17,7 @@
                 </h1>
             </div>
             
+            @hasanyrole('admin|manager')
             <div class="flex gap-3">
                 <a href="{{ route('tasks.edit', $task) }}" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-background border border-secondary/30 text-text hover:text-white hover:border-primary/50 transition-all duration-300">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
@@ -31,6 +32,7 @@
                     </button>
                 </form>
             </div>
+            @endhasanyrole
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
