@@ -74,7 +74,8 @@ class TaskController extends Controller
 
     public function edit(Task $task)
     {
-        return view('tasks.edit', compact('task'));
+        $users = \App\Models\User::role('field_personnel')->get();
+        return view('tasks.edit', compact('task', 'users'));
     }
 
     public function update(UpdateTaskRequest $request, Task $task)
