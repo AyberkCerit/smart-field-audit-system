@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     
     // Sadece Admin ve Manager
     Route::middleware(['role:admin|manager'])->group(function () {
+        Route::patch('tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.update-status');
         Route::resource('tasks', TaskController::class)->only(['create', 'store', 'edit', 'update', 'destroy']);
         Route::resource('audit-points', AuditPointController::class)->except(['index', 'show']);
     });

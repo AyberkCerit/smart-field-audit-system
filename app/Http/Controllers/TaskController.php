@@ -110,6 +110,17 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
     }
 
+    public function updateStatus(\Illuminate\Http\Request $request, Task $task)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,completed'
+        ]);
+
+        $task->update(['status' => $request->status]);
+
+        return redirect()->back()->with('success', 'Task status updated successfully.');
+    }
+
     public function destroy(Task $task)
     {
         if ($task->auditPoint) {

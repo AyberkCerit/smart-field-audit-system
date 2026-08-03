@@ -51,11 +51,29 @@
                         @endif
 
                         <!-- Status Badge -->
-                        @if($task->status === 'completed')
-                            <span class="bg-green-500/20 text-green-400 border border-green-500/20 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-[0_0_5px_rgba(74,222,128,0.3)]">Completed</span>
+                        @hasanyrole('admin|manager')
+                            <form action="{{ route('tasks.update-status', $task) }}" method="POST" class="inline-block m-0 p-0">
+                                @csrf
+                                @method('PATCH')
+                                @if($task->status === 'completed')
+                                    <input type="hidden" name="status" value="pending">
+                                    <button type="submit" class="bg-green-500/20 text-green-400 border border-green-500/20 hover:bg-green-500/30 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-[0_0_5px_rgba(74,222,128,0.3)] cursor-pointer transition-colors" title="Click to mark as Pending">
+                                        Completed
+                                    </button>
+                                @else
+                                    <input type="hidden" name="status" value="completed">
+                                    <button type="submit" class="bg-[#e4ba00]/20 text-[#e4ba00] border border-[#e4ba00]/30 hover:bg-[#e4ba00]/30 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-[0_0_5px_rgba(228,186,0,0.3)] cursor-pointer transition-colors" title="Click to mark as Completed">
+                                        Pending
+                                    </button>
+                                @endif
+                            </form>
                         @else
-                            <span class="bg-[#e4ba00]/20 text-[#e4ba00] border border-[#e4ba00]/30 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-[0_0_5px_rgba(228,186,0,0.3)]">Pending</span>
-                        @endif
+                            @if($task->status === 'completed')
+                                <span class="bg-green-500/20 text-green-400 border border-green-500/20 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-[0_0_5px_rgba(74,222,128,0.3)]">Completed</span>
+                            @else
+                                <span class="bg-[#e4ba00]/20 text-[#e4ba00] border border-[#e4ba00]/30 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-[0_0_5px_rgba(228,186,0,0.3)]">Pending</span>
+                            @endif
+                        @endhasanyrole
                     </div>
 
                     <h2 class="text-2xl font-bold text-white mb-4">{{ $task->title }}</h2>
