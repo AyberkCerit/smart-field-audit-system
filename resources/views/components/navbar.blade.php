@@ -71,33 +71,47 @@
                 
                 <!-- Notifications Dropdown -->
                 <div x-show="openNotifications" 
-                     x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0 scale-95"
-                     x-transition:enter-end="opacity-100 scale-100"
-                     x-transition:leave="transition ease-in duration-75"
-                     x-transition:leave-start="opacity-100 scale-100"
-                     x-transition:leave-end="opacity-0 scale-95"
-                     class="absolute right-0 top-full mt-2 w-80 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden z-[9999]" style="display: none;">
+                     x-transition:enter="transition-all ease-out duration-300 cubic-bezier(0.4, 0, 0.2, 1)"
+                     x-transition:enter-start="opacity-0 -translate-y-4 scale-95 blur-[2px]"
+                     x-transition:enter-end="opacity-100 translate-y-0 scale-100 blur-0"
+                     x-transition:leave="transition-all ease-in duration-200"
+                     x-transition:leave-start="opacity-100 translate-y-0 scale-100 blur-0"
+                     x-transition:leave-end="opacity-0 -translate-y-2 scale-95 blur-[1px]"
+                     class="absolute right-0 top-full mt-3 w-80 bg-card-dark/95 backdrop-blur-xl border border-secondary/30 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden z-[9999]" style="display: none;">
                     
-                    <div class="p-3 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-                        <span class="font-bold text-gray-700 text-sm">Bildirimler</span>
+                    <div class="p-4 border-b border-secondary/30 bg-background/50 flex items-center justify-between">
+                        <span class="font-bold text-white text-sm flex items-center gap-2">
+                            <svg class="w-4 h-4 text-[#a4d756]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                            Notifications
+                        </span>
                         @if(auth()->user()->unreadNotifications->count() > 0)
                             <form action="{{ route('notifications.markAllAsRead') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="text-xs text-primary hover:text-primary-dark font-semibold">Tümünü Okundu İşaretle</button>
+                                <button type="submit" class="text-xs text-[#a4d756] hover:text-[#91c342] font-bold transition-colors">Mark all read</button>
                             </form>
                         @endif
                     </div>
                     
                     <div class="max-h-80 overflow-y-auto">
                         @forelse(auth()->user()->unreadNotifications as $notification)
-                            <a href="{{ route('notifications.markAsRead', $notification->id) }}" class="block p-3 border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                                <p class="text-sm text-gray-800 font-medium">{{ $notification->data['message'] ?? 'Yeni bildirim' }}</p>
-                                <span class="text-xs text-gray-500 mt-1 block">{{ $notification->created_at->diffForHumans() }}</span>
+                            <a href="{{ route('notifications.markAsRead', $notification->id) }}" class="block p-4 border-b border-secondary/20 hover:bg-white/5 transition-all duration-200 group">
+                                @php
+                                    $msg = $notification->data['message'] ?? 'Yeni bildirim';
+                                    $msgParts = explode(':', $msg, 2);
+                                    $title = $msgParts[0];
+                                    $desc = isset($msgParts[1]) ? ':' . $msgParts[1] : '';
+                                @endphp
+                                <p class="text-sm font-medium leading-relaxed group-hover:translate-x-1 transition-transform">
+                                    <span class="text-[#a4d756] font-bold">{{ $title }}</span><span class="text-text">{{ $desc }}</span>
+                                </p>
+                                <span class="text-xs text-secondary mt-1.5 block group-hover:text-secondary/80 transition-colors">{{ $notification->created_at->diffForHumans() }}</span>
                             </a>
                         @empty
-                            <div class="p-4 text-center text-sm text-gray-500">
-                                Yeni bildiriminiz yok.
+                            <div class="p-6 flex flex-col items-center justify-center text-center">
+                                <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary mb-3">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                                <p class="text-sm text-secondary font-medium">You don't have any new notifications.</p>
                             </div>
                         @endforelse
                     </div>
