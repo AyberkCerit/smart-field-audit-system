@@ -52,7 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
         progress.style.width = '0%';
         
         content.classList.remove('scale-95');
-        text.innerText = "Oluşturmak İçin Basılı Tut";
+        const defaultText = btn.dataset.defaultText || "Oluşturmak İçin Basılı Tut";
+        text.innerText = defaultText;
     }
 
     // Mouse

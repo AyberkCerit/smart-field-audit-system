@@ -183,6 +183,60 @@
                         </div>
                     </div>
                 </div>
+
+            @if(auth()->user()->hasRole('field_personnel') && !auth()->user()->hasAnyRole(['admin', 'manager']) && $task->status === 'pending')
+                @if($task->assigned_to === null)
+                    <!-- Görevi Devral -->
+                    <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+                        <h3 class="text-lg font-bold text-white mb-2">Görev İşlemleri</h3>
+                        <p class="text-sm text-secondary mb-4">Bu görev şu an havuzda. Üstlenmek için aşağıdaki butona tıklayın.</p>
+                        <form action="{{ route('tasks.claim', $task) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-[#a4d756] hover:bg-[#91c342] text-gray-900 shadow-[0_0_15px_rgba(164,215,86,0.4)] hover:-translate-y-1 transition-all duration-300">
+                                Görevi Devral
+                            </button>
+                        </form>
+                    </div>
+                @elseif($task->assigned_to === auth()->id())
+                    <!-- Görevi Tamamla -->
+                    <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+                        <h3 class="text-lg font-bold text-white mb-2">Görevi Tamamla</h3>
+                        <p class="text-sm text-secondary mb-4">Görevi tamamlamak için bir kanıt fotoğrafı yükleyin ve bulunduğunuz konumu doğrulayın.</p>
+                        
+                        <form id="completeTaskForm" action="{{ route('tasks.complete', $task) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                            @csrf
+                            <div>
+                                <label for="proof_photo" class="block text-sm font-semibold text-text mb-2">Kanıt Fotoğrafı <span class="text-red-500">*</span></label>
+                                <input type="file" id="proof_photo" name="proof_photo" accept="image/*" required
+                                       class="block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 bg-background border border-secondary/30 rounded-xl cursor-pointer focus:outline-none transition-all">
+                                <p class="text-xs text-secondary mt-2">İzin verilen formatlar: JPG, PNG. Maksimum: 10MB (Sunucu limitlerine bağlıdır)</p>
+                                @error('proof_photo')
+                                    <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            
+                            <input type="hidden" id="latitude" name="latitude">
+                            <input type="hidden" id="longitude" name="longitude">
+                            
+                            <div id="locationStatus" class="text-xs text-orange-400 mb-2 flex items-center gap-1">
+                                <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                Konumunuz alınıyor, lütfen bekleyin...
+                            </div>
+                            
+                            <button type="button" id="holdToConfirmBtn" data-default-text="Basılı Tutarak Tamamla" data-bg-class="bg-green-500" data-shadow-class="shadow-[0_0_20px_rgba(34,197,94,0.8)]" disabled class="relative overflow-hidden w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border-2 border-green-500/40 bg-background/50 text-white shadow-lg opacity-50 cursor-not-allowed transition-all duration-300 group">
+                                <div id="holdProgress" class="absolute left-0 top-0 bottom-0 w-0 bg-green-500/90"></div>
+                                <span class="relative z-10 flex items-center gap-2" id="holdContent">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                                    <span id="holdText">Basılı Tutarak Tamamla</span>
+                                </span>
+                            </button>
+                            @if(session('error'))
+                                <p class="text-red-400 text-xs mt-2 font-medium">{{ session('error') }}</p>
+                            @endif
+                        </form>
+                    </div>
+                @endif
+            @endif
             </div>
 
             <!-- Right Column: Map Card -->
@@ -214,27 +268,50 @@
 
     @push('scripts')
         <script defer src="{{ asset('js/map-helper.js') }}?v={{ time() }}"></script>
+        <script defer src="{{ asset('js/hold-to-confirm.js') }}?v={{ time() }}"></script>
         @if($task->auditPoint)
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const mapElement = document.getElementById('taskMap');
-                if (!mapElement) return;
+                if (mapElement) {
+                    const lat = @json($task->auditPoint->latitude);
+                    const lng = @json($task->auditPoint->longitude);
+                    
+                    var map = window.SahaMapHelper.init('taskMap', [lat, lng], 15);
+                    const customIcon = window.SahaMapHelper.getCustomPinIcon();
+                    L.marker([lat, lng], {icon: customIcon}).addTo(map);
+                }
 
-                const lat = @json($task->auditPoint->latitude);
-                const lng = @json($task->auditPoint->longitude);
+                // Geolocation logic for Field Personnel task completion
+                const latInput = document.getElementById('latitude');
+                const lngInput = document.getElementById('longitude');
+                const statusDiv = document.getElementById('locationStatus');
+                const btn = document.getElementById('holdToConfirmBtn');
                 
-                // Initialize map via map-helper.js
-                var map = window.SahaMapHelper.init('taskMap', [lat, lng], 15);
-                
-                // We can disable map dragging (optional, for static view)
-                // map.dragging.disable();
-                // map.touchZoom.disable();
-                // map.doubleClickZoom.disable();
-                // map.scrollWheelZoom.disable();
-                
-                // Add pin
-                const customIcon = window.SahaMapHelper.getCustomPinIcon();
-                L.marker([lat, lng], {icon: customIcon}).addTo(map);
+                if (latInput && lngInput && statusDiv && btn) {
+                    if ("geolocation" in navigator) {
+                        navigator.geolocation.getCurrentPosition(
+                            function(position) {
+                                latInput.value = position.coords.latitude;
+                                lngInput.value = position.coords.longitude;
+                                statusDiv.innerHTML = '<svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Konum doğrulandı. Tamamlayabilirsiniz.';
+                                statusDiv.className = 'text-xs text-green-400 mb-2 flex items-center gap-1';
+                                btn.disabled = false;
+                                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            },
+                            function(error) {
+                                let msg = "Konum alınamadı. (Lütfen konum erişimine izin verin)";
+                                if(error.code === error.PERMISSION_DENIED) msg = "Konum izni reddedildi. Görevi tamamlamak için tarayıcı ayarlarından konum erişimine izin vermelisiniz.";
+                                statusDiv.innerHTML = '<svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg> ' + msg;
+                                statusDiv.className = 'text-xs text-red-400 mb-2 flex items-start gap-1';
+                            },
+                            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                        );
+                    } else {
+                        statusDiv.innerText = "Tarayıcınız konum özelliğini desteklemiyor.";
+                        statusDiv.className = 'text-xs text-red-400 mb-2';
+                    }
+                }
             });
         </script>
         @endif

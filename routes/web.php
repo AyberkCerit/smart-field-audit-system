@@ -23,6 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/tasks/{task}/attachment/{media}', [TaskController::class, 'attachment'])->name('tasks.attachment');
+    Route::post('/tasks/{task}/claim', [TaskController::class, 'claimTask'])->name('tasks.claim');
+    Route::post('/tasks/{task}/complete', [TaskController::class, 'completeTask'])->name('tasks.complete');
     
     // Sadece Admin ve Manager
     Route::middleware(['role:admin|manager'])->group(function () {

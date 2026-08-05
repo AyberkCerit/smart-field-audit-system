@@ -12,6 +12,15 @@ class TaskController extends Controller
     {
         $query = Task::with(['auditPoint', 'assignedUser', 'manager']);
 
+        // Eğer kullanıcı sadece field_personnel ise, sadece havuzdakileri ve kendine atananları görsün.
+        // Admin ve Manager her şeyi görebilir.
+        if (auth()->user()->hasRole('field_personnel') && !auth()->user()->hasAnyRole(['admin', 'manager'])) {
+            $query->where(function ($q) {
+                $q->where('assigned_to', auth()->id())
+                  ->orWhereNull('assigned_to');
+            });
+        }
+
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
@@ -166,5 +175,62 @@ class TaskController extends Controller
             'Content-Type' => $media->mime_type,
             'Content-Disposition' => 'inline; filename="'.$media->file_name.'"',
         ]);
+    }
+
+    public function claimTask(\Illuminate\Http\Request $request, Task $task)
+    {
+        if ($task->assigned_to !== null) {
+            return redirect()->back()->with('error', 'Bu görev zaten başkasına atanmış.');
+        }
+
+        $task->update(['assigned_to' => auth()->id()]);
+        return redirect()->back()->with('success', 'Görevi başarıyla devraldınız.');
+    }
+
+    public function completeTask(\Illuminate\Http\Request $request, Task $task)
+    {
+        $request->validate([
+            'proof_photo' => 'required|image|max:10240', // 10MB
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+        ]);
+
+        if ($task->status === 'completed') {
+            return redirect()->back()->with('error', 'Görev zaten tamamlanmış.');
+        }
+
+        // Mesafe hesaplama (Haversine formülü)
+        if ($task->auditPoint) {
+            $lat1 = $request->latitude;
+            $lon1 = $request->longitude;
+            $lat2 = $task->auditPoint->latitude;
+            $lon2 = $task->auditPoint->longitude;
+
+            $earthRadius = 6371000; // meters
+            $latDelta = deg2rad($lat2 - $lat1);
+            $lonDelta = deg2rad($lon2 - $lon1);
+            $a = sin($latDelta / 2) * sin($latDelta / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($lonDelta / 2) * sin($lonDelta / 2);
+            $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+            $distance = $earthRadius * $c;
+
+            if ($distance > 200) {
+                return redirect()->back()->with('error', 'Görev konumuna çok uzaksınız. (Mesafe: ' . round($distance) . 'm. Maksimum 200m olmalıdır.)');
+            }
+        }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($request, $task) {
+            $task->update(['status' => 'completed']);
+            
+            if ($task->assigned_to === null) {
+                $task->update(['assigned_to' => auth()->id()]);
+            }
+
+            $task->addMediaFromRequest('proof_photo')->toMediaCollection('task_proofs', 's3');
+        });
+
+        $adminsAndManagers = \App\Models\User::role(['admin', 'manager'])->get();
+        \Illuminate\Support\Facades\Notification::send($adminsAndManagers, new \App\Notifications\TaskCompletedNotification($task));
+
+        return redirect()->back()->with('success', 'Görev başarıyla tamamlandı.');
     }
 }
