@@ -43,6 +43,9 @@ class RegisteredUserController extends Controller
         ]);
 
         event(new Registered($user));
+        
+        $adminsAndManagers = User::role(['admin', 'manager'])->get();
+        \Illuminate\Support\Facades\Notification::send($adminsAndManagers, new \App\Notifications\NewUserNotification($user));
 
         Auth::login($user);
 

@@ -39,8 +39,9 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request)
     {
         $data = $request->validated();
+        $task = null;
 
-        \Illuminate\Support\Facades\DB::transaction(function () use ($data, $request) {
+        \Illuminate\Support\Facades\DB::transaction(function () use ($data, $request, &$task) {
             $auditPoint = \App\Models\AuditPoint::create([
                 'name' => $data['title'] . ' (Task Area)',
                 'description' => 'Automatically added when creating a task from the map.',
@@ -62,6 +63,22 @@ class TaskController extends Controller
                 $task->addMediaFromRequest('attachment')->toMediaCollection('task_attachments', 's3');
             }
         });
+
+        // Bildirimler
+        if ($task) {
+            $adminsAndManagers = \App\Models\User::role(['admin', 'manager'])->get();
+            \Illuminate\Support\Facades\Notification::send($adminsAndManagers, new \App\Notifications\NewTaskNotification($task, 'Yeni görev oluşturuldu: ' . $task->title));
+
+            if ($task->assigned_to) {
+                $assignedUser = \App\Models\User::find($task->assigned_to);
+                if ($assignedUser) {
+                    $assignedUser->notify(new \App\Notifications\NewTaskNotification($task, 'Size yeni bir görev atandı: ' . $task->title));
+                }
+            } else {
+                $fieldPersonnel = \App\Models\User::role('field_personnel')->get();
+                \Illuminate\Support\Facades\Notification::send($fieldPersonnel, new \App\Notifications\NewTaskNotification($task, 'Havuza yeni bir görev eklendi: ' . $task->title));
+            }
+        }
         
         return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
@@ -117,6 +134,11 @@ class TaskController extends Controller
         ]);
 
         $task->update(['status' => $request->status]);
+
+        if ($request->status === 'completed') {
+            $adminsAndManagers = \App\Models\User::role(['admin', 'manager'])->get();
+            \Illuminate\Support\Facades\Notification::send($adminsAndManagers, new \App\Notifications\TaskCompletedNotification($task));
+        }
 
         return redirect()->back()->with('success', 'Task status updated successfully.');
     }
