@@ -11,7 +11,8 @@ class AuditPointController extends Controller
     public function index()
     {
         $auditPoints = AuditPoint::with('tasks')->paginate(15);
-        return view('audit-points.index', compact('auditPoints'));
+        $mapDefaultView = \App\Models\Setting::where('key', 'map_default_view')->value('value') ?? 'hybrid';
+        return view('audit-points.index', compact('auditPoints', 'mapDefaultView'));
     }
 
     public function create()

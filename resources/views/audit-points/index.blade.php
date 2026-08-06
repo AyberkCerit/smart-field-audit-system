@@ -75,6 +75,7 @@
         <script>
             // Pass the audit points data to the external JS file
             window.auditPointsData = @json($auditPoints->items());
+            window.defaultMapView = '{{ $mapDefaultView ?? "hybrid" }}';
         </script>
         <script defer src="{{ asset('js/audit-points.js') }}?v={{ time() }}"></script>
     @endpush

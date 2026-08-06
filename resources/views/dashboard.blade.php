@@ -157,6 +157,7 @@
         <script>
             // Using window object to pass backend data to map JS file
             window.dashboardMapPoints = @json($auditPoints ?? []);
+            window.defaultMapView = '{{ $mapDefaultView ?? "hybrid" }}';
         </script>
         <script defer src="{{ asset('js/dashboard.js') }}?v={{ time() }}"></script>
     @endpush

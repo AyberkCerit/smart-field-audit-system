@@ -60,7 +60,9 @@ class DashboardController extends Controller
 
         $latestUsers = User::orderBy('created_at', 'desc')->take(5)->get();
         $recentActivities = Activity::with('causer')->orderBy('created_at', 'desc')->take(5)->get();
+        
+        $mapDefaultView = \App\Models\Setting::where('key', 'map_default_view')->value('value') ?? 'hybrid';
 
-        return view('dashboard', compact('recentTasks', 'totalSolved', 'avgResolutionTime', 'auditPoints', 'latestUsers', 'recentActivities'));
+        return view('dashboard', compact('recentTasks', 'totalSolved', 'avgResolutionTime', 'auditPoints', 'latestUsers', 'recentActivities', 'mapDefaultView'));
     }
 }

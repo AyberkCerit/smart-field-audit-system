@@ -20,8 +20,12 @@ window.SahaMapHelper = {
             document.head.appendChild(style);
         }
 
-        // Google Maps Standart Yol Haritası Katmanı
-        L.tileLayer('https://mt1.google.com/vt/lyrs=m&hl=tr&x={x}&y={y}&z={z}', {
+        // Harita Katmanını window.defaultMapView değerine göre belirle (street, satellite, hybrid)
+        let mapType = 'y'; // varsayılan hybrid
+        if (window.defaultMapView === 'street') mapType = 'm';
+        else if (window.defaultMapView === 'satellite') mapType = 's';
+        
+        L.tileLayer(`https://mt1.google.com/vt/lyrs=${mapType}&hl=tr&x={x}&y={y}&z={z}`, {
             maxZoom: 20,
             attribution: 'Map data &copy; <a href="https://www.google.com/maps">Google</a>',
             className: 'google-dark-mode-tiles' // CSS filtresini uygulamak için özel sınıf
