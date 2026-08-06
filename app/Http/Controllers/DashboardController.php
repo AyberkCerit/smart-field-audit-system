@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\User;
+use Spatie\Activitylog\Models\Activity;
 
 class DashboardController extends Controller
 {
@@ -56,6 +58,9 @@ class DashboardController extends Controller
             return \App\Models\AuditPoint::where('is_active', true)->get();
         });
 
-        return view('dashboard', compact('recentTasks', 'totalSolved', 'avgResolutionTime', 'auditPoints'));
+        $latestUsers = User::orderBy('created_at', 'desc')->take(5)->get();
+        $recentActivities = Activity::with('causer')->orderBy('created_at', 'desc')->take(5)->get();
+
+        return view('dashboard', compact('recentTasks', 'totalSolved', 'avgResolutionTime', 'auditPoints', 'latestUsers', 'recentActivities'));
     }
 }
