@@ -26,11 +26,13 @@
                 Map
             </a>
             
+            @hasanyrole('admin|manager')
             <!-- Activity Log Button (All Roles) -->
             <a href="{{ route('activity-logs.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 {{ request()->routeIs('activity-logs.index') ? 'text-white bg-white/10 shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-white hover:bg-white/10 hover:shadow-[0_0_15px_rgba(0,0,0,0.1)]' }}">
                 <svg class="w-5 h-5 {{ request()->routeIs('activity-logs.index') ? '' : 'opacity-90' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 Activity Log
             </a>
+            @endhasanyrole
 
             @hasanyrole('admin|manager')
             <!-- Create Task Button (Admin & Manager) -->

@@ -58,11 +58,26 @@ class DashboardController extends Controller
             return \App\Models\AuditPoint::where('is_active', true)->get();
         });
 
-        $latestUsers = User::orderBy('created_at', 'desc')->take(5)->get();
-        $recentActivities = Activity::with('causer')->orderBy('created_at', 'desc')->take(5)->get();
+        $latestUsers = collect();
+        $recentActivities = collect();
+        $personnelTasks = collect();
+        $feedbacks = collect();
+
+        if ($user->hasAnyRole(['admin', 'manager'])) {
+            $latestUsers = User::orderBy('created_at', 'desc')->take(5)->get();
+            $recentActivities = Activity::with('causer')->orderBy('created_at', 'desc')->take(5)->get();
+            $feedbacks = \App\Models\Feedback::with('user')->orderBy('created_at', 'desc')->take(10)->get();
+        } else {
+            $personnelTasks = Task::where('assigned_to', $user->id)
+                ->where('status', '!=', 'completed')
+                ->with('auditPoint')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            $feedbacks = \App\Models\Feedback::with('user')->orderBy('created_at', 'desc')->take(10)->get();
+        }
         
         $mapDefaultView = \App\Models\Setting::where('key', 'map_default_view')->value('value') ?? 'hybrid';
 
-        return view('dashboard', compact('recentTasks', 'totalSolved', 'avgResolutionTime', 'auditPoints', 'latestUsers', 'recentActivities', 'mapDefaultView'));
+        return view('dashboard', compact('recentTasks', 'totalSolved', 'avgResolutionTime', 'auditPoints', 'latestUsers', 'recentActivities', 'mapDefaultView', 'personnelTasks', 'feedbacks'));
     }
 }

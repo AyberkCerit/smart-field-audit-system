@@ -89,9 +89,10 @@
             </div>
         </div>
 
-        <!-- Right Side: Latest Users & Activity Log -->
+        <!-- Right Side: Role Specific Content -->
         <div class="flex flex-col gap-6">
             
+            @hasanyrole('admin|manager')
             <!-- Latest Users -->
             <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:border-accent/40">
                 <div class="flex items-center gap-3 mb-4">
@@ -147,6 +148,64 @@
                     @endforelse
                 </div>
             </div>
+            @else
+            <!-- Active Tasks for Personnel -->
+            <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:border-accent/40 max-h-[300px]">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.3)]">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Active Tasks</h3>
+                </div>
+                <div class="flex flex-col gap-3 overflow-y-auto custom-scrollbar pr-2">
+                    @forelse($personnelTasks as $task)
+                        <a href="{{ route('tasks.show', $task->id) }}" class="bg-background/50 rounded-lg p-3 border border-secondary/20 flex justify-between items-center hover:border-primary/30 hover:bg-white/5 transition-colors group">
+                            <div>
+                                <p class="text-sm font-semibold text-white group-hover:text-primary transition-colors">{{ Str::limit($task->title, 30) }}</p>
+                                <p class="text-xs text-secondary mt-1">{{ $task->auditPoint ? $task->auditPoint->name : 'No Point' }}</p>
+                            </div>
+                            <span class="px-2 py-1 text-[10px] uppercase font-bold rounded-md bg-[#e4ba00]/20 text-[#e4ba00]">
+                                {{ ucfirst($task->status) }}
+                            </span>
+                        </a>
+                    @empty
+                        <div class="text-sm text-secondary text-center py-4">You have no active tasks.</div>
+                    @endforelse
+                </div>
+            </div>
+
+            <!-- Feedback Chat -->
+            <div class="bg-card-dark rounded-2xl border border-secondary/30 flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:border-accent/40 flex-grow max-h-[400px]">
+                <div class="flex items-center gap-3 p-4 border-b border-secondary/30">
+                    <div class="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center text-green-400 shadow-[0_0_10px_rgba(74,222,128,0.3)]">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white">Feedback to Managers</h3>
+                </div>
+                
+                <div class="flex-grow flex flex-col-reverse p-4 gap-3 overflow-y-auto custom-scrollbar">
+                    @forelse($feedbacks as $feedback)
+                        <div class="bg-background/50 rounded-lg p-3 border border-secondary/20 {{ $feedback->user_id === auth()->id() ? 'ml-auto border-primary/30 bg-primary/10' : 'mr-auto' }} max-w-[85%]">
+                            <div class="flex justify-between items-center mb-1 gap-4">
+                                <span class="text-xs font-bold {{ $feedback->user_id === auth()->id() ? 'text-primary' : 'text-white' }}">{{ $feedback->user_id === auth()->id() ? 'You' : $feedback->user->name }}</span>
+                                <span class="text-[10px] text-secondary">{{ $feedback->created_at->format('H:i') }}</span>
+                            </div>
+                            <p class="text-sm text-white/90">{{ $feedback->message }}</p>
+                        </div>
+                    @empty
+                        <div class="text-sm text-secondary text-center py-4">No feedback sent yet. Start the conversation!</div>
+                    @endforelse
+                </div>
+
+                <div class="p-4 border-t border-secondary/30 bg-background/30 rounded-b-2xl">
+                    <form action="{{ route('feedbacks.store') }}" method="POST" class="flex gap-2">
+                        @csrf
+                        <input type="text" name="message" placeholder="Type your feedback..." required class="flex-grow bg-background border border-secondary/40 rounded-xl px-4 py-2 text-white text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary/80 hover:shadow-lg transition-all">Send</button>
+                    </form>
+                </div>
+            </div>
+            @endhasanyrole
 
         </div>
 
