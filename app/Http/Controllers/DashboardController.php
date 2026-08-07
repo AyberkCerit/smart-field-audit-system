@@ -62,22 +62,30 @@ class DashboardController extends Controller
         $recentActivities = collect();
         $personnelTasks = collect();
         $feedbacks = collect();
+        $chatUsers = collect();
 
         if ($user->hasAnyRole(['admin', 'manager'])) {
             $latestUsers = User::orderBy('created_at', 'desc')->take(5)->get();
             $recentActivities = Activity::with('causer')->orderBy('created_at', 'desc')->take(5)->get();
-            $feedbacks = \App\Models\Feedback::with('user')->orderBy('created_at', 'desc')->take(10)->get();
+            $chatUsers = User::whereDoesntHave('roles', function($q) {
+                $q->whereIn('name', ['admin', 'manager']);
+            })->get();
+            $feedbacks = collect(); // Managers start with no active chat selected
         } else {
             $personnelTasks = Task::where('assigned_to', $user->id)
                 ->where('status', '!=', 'completed')
                 ->with('auditPoint')
                 ->orderBy('created_at', 'desc')
                 ->get();
-            $feedbacks = \App\Models\Feedback::with('user')->orderBy('created_at', 'desc')->take(10)->get();
+            $feedbacks = \App\Models\Feedback::with('user')
+                ->where('personnel_id', $user->id)
+                ->orderBy('created_at', 'desc')
+                ->take(50)
+                ->get();
         }
         
         $mapDefaultView = \App\Models\Setting::where('key', 'map_default_view')->value('value') ?? 'hybrid';
 
-        return view('dashboard', compact('recentTasks', 'totalSolved', 'avgResolutionTime', 'auditPoints', 'latestUsers', 'recentActivities', 'mapDefaultView', 'personnelTasks', 'feedbacks'));
+        return view('dashboard', compact('recentTasks', 'totalSolved', 'avgResolutionTime', 'auditPoints', 'latestUsers', 'recentActivities', 'mapDefaultView', 'personnelTasks', 'feedbacks', 'chatUsers'));
     }
 }

@@ -29,6 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/feedbacks', [\App\Http\Controllers\FeedbackController::class, 'store'])
         ->name('feedbacks.store')
         ->middleware('throttle:10,1');
+        
+    Route::get('/feedbacks/history/{personnelId}', [\App\Http\Controllers\FeedbackController::class, 'history'])->name('feedbacks.history');
     
     // Sadece Admin ve Manager
     Route::middleware(['role:admin|manager'])->group(function () {

@@ -93,59 +93,36 @@
         <div class="flex flex-col gap-6">
             
             @hasanyrole('admin|manager')
-            <!-- Latest Users -->
-            <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:border-accent/40">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-white">Latest Registered Users</h3>
-                </div>
-                <div class="flex flex-col gap-3">
-                    @forelse($latestUsers as $user)
-                        <div class="bg-background/50 rounded-lg p-3 border border-secondary/20 flex justify-between items-center hover:border-primary/30 transition-colors">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
-                                    {{ substr($user->name, 0, 1) }}
-                                </div>
-                                <div>
-                                    <p class="text-sm font-semibold text-white">{{ $user->name }}</p>
-                                    <p class="text-xs text-secondary">{{ $user->email }}</p>
-                                </div>
-                            </div>
-                            <span class="text-xs text-secondary">{{ $user->created_at->diffForHumans() }}</span>
+            <!-- Manager Chat Interface -->
+            <div class="bg-card-dark rounded-2xl border border-secondary/30 flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:border-accent/40 flex-grow min-h-[400px] lg:min-h-[500px]">
+                <div class="flex items-center justify-between p-4 border-b border-secondary/30">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center text-green-400 shadow-[0_0_10px_rgba(74,222,128,0.3)]">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                         </div>
-                    @empty
-                        <div class="text-sm text-secondary text-center py-4">No users found.</div>
-                    @endforelse
+                        <h3 class="text-lg font-bold text-white">Personnel Feedbacks</h3>
+                    </div>
+                    <div>
+                        <select id="chat-user-select" class="bg-background border border-secondary/40 rounded-xl px-3 py-1.5 text-white text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                            <option value="">Select a user...</option>
+                            @foreach($chatUsers as $u)
+                                <option value="{{ $u->id }}">{{ $u->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-            </div>
+                
+                <div id="manager-feedback-container" class="flex-grow flex flex-col-reverse p-4 gap-3 overflow-y-auto custom-scrollbar bg-background/10">
+                    <div class="text-sm text-secondary text-center py-4 w-full h-full flex items-center justify-center">Please select a personnel to view their feedback thread.</div>
+                </div>
 
-            <!-- Recent Activities -->
-            <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:border-accent/40 flex-grow">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400 shadow-[0_0_10px_rgba(249,115,22,0.3)]">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-white">Recent Activities</h3>
-                </div>
-                <div class="flex flex-col gap-3">
-                    @forelse($recentActivities as $activity)
-                        <div class="bg-background/50 rounded-lg p-3 border border-secondary/20 flex flex-col hover:border-primary/30 transition-colors">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-sm font-semibold text-white">{{ $activity->causer ? $activity->causer->name : 'System' }}</span>
-                                <span class="text-xs text-secondary">{{ $activity->created_at->diffForHumans() }}</span>
-                            </div>
-                            <p class="text-xs text-secondary/80">
-                                <span class="capitalize text-primary/80">{{ $activity->log_name ?? 'default' }}:</span> {{ $activity->description }}
-                                @if($activity->subject_type)
-                                    <span class="text-secondary/60">on {{ class_basename($activity->subject_type) }}</span>
-                                @endif
-                            </p>
-                        </div>
-                    @empty
-                        <div class="text-sm text-secondary text-center py-4">No recent activities.</div>
-                    @endforelse
+                <div class="p-4 border-t border-secondary/30 bg-background/30 rounded-b-2xl">
+                    <form id="manager-feedback-form" action="{{ route('feedbacks.store') }}" method="POST" class="flex gap-2" style="display: none;">
+                        @csrf
+                        <input type="hidden" name="personnel_id" id="manager-personnel-id" value="">
+                        <input type="text" name="message" placeholder="Type your reply..." required class="flex-grow bg-background border border-secondary/40 rounded-xl px-4 py-2 text-white text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary/80 hover:shadow-lg transition-all">Reply</button>
+                    </form>
                 </div>
             </div>
             @else
@@ -210,6 +187,66 @@
         </div>
 
     </div>
+
+    @hasanyrole('admin|manager')
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <!-- Latest Users -->
+        <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:border-accent/40">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold text-white">Latest Registered Users</h3>
+            </div>
+            <div class="flex flex-col gap-3">
+                @forelse($latestUsers as $user)
+                    <div class="bg-background/50 rounded-lg p-3 border border-secondary/20 flex justify-between items-center hover:border-primary/30 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                                {{ substr($user->name, 0, 1) }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-white">{{ $user->name }}</p>
+                                <p class="text-xs text-secondary">{{ $user->email }}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-secondary">{{ $user->created_at->diffForHumans() }}</span>
+                    </div>
+                @empty
+                    <div class="text-sm text-secondary text-center py-4">No users found.</div>
+                @endforelse
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 flex flex-col shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:border-accent/40 flex-grow">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center text-orange-400 shadow-[0_0_10px_rgba(249,115,22,0.3)]">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold text-white">Recent Activities</h3>
+            </div>
+            <div class="flex flex-col gap-3">
+                @forelse($recentActivities as $activity)
+                    <div class="bg-background/50 rounded-lg p-3 border border-secondary/20 flex flex-col hover:border-primary/30 transition-colors">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-semibold text-white">{{ $activity->causer ? $activity->causer->name : 'System' }}</span>
+                            <span class="text-xs text-secondary">{{ $activity->created_at->diffForHumans() }}</span>
+                        </div>
+                        <p class="text-xs text-secondary/80">
+                            <span class="capitalize text-primary/80">{{ $activity->log_name ?? 'default' }}:</span> {{ $activity->description }}
+                            @if($activity->subject_type)
+                                <span class="text-secondary/60">on {{ class_basename($activity->subject_type) }}</span>
+                            @endif
+                        </p>
+                    </div>
+                @empty
+                    <div class="text-sm text-secondary text-center py-4">No recent activities.</div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+    @endhasanyrole
 
     @push('scripts')
         <script defer src="{{ asset('js/map-helper.js') }}?v={{ time() }}"></script>
