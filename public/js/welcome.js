@@ -1,4 +1,4 @@
-let scene, camera, renderer, controls, composer;
+let scene, camera, renderer, composer;
 let brainModel, backgroundParticles;
 
 let networkGroup;
@@ -15,6 +15,9 @@ let mouseY = 0;
 let targetX = 0;
 let targetY = 0;
 
+let scrollPercent = 0;
+let zoomPercent = 0;
+
 function init() {
     console.log("Three.js init started");
     container = document.getElementById('canvas-container');
@@ -30,7 +33,7 @@ function init() {
     const height = container.clientHeight || 500;
 
     scene = new THREE.Scene();
-    scene.background = null; 
+    scene.background = new THREE.Color(0x171717); 
     
     sceneGroup = new THREE.Group();
     scene.add(sceneGroup);
@@ -42,11 +45,6 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
     container.appendChild(renderer.domElement);
-
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.enableZoom = false; 
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
@@ -79,8 +77,27 @@ function init() {
 
     window.addEventListener('resize', onWindowResize, false);
     document.addEventListener('mousemove', onDocumentMouseMove, false);
+    window.addEventListener('scroll', onScroll, false);
     
     animate();
+}
+
+function onScroll() {
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    if (maxScroll > 0) {
+        scrollPercent = Math.max(0, Math.min(window.scrollY / maxScroll, 1));
+    }
+
+    // Zoom finishes at 80vh (slightly faster than full screen scroll)
+    zoomPercent = Math.max(0, Math.min(window.scrollY / (window.innerHeight * 0.8), 1));
+
+    // Fade out welcome text and indicator early in the scroll
+    const welcomeText = document.querySelector('h1');
+    const scrollIndicator = document.querySelector('.bottom-0');
+    const opacity = Math.max(0, 1 - (zoomPercent * 4)); // Fades out completely by 25% scroll
+    
+    if (welcomeText) welcomeText.style.opacity = opacity;
+    if (scrollIndicator) scrollIndicator.style.opacity = opacity;
 }
 
 function onDocumentMouseMove(event) {
@@ -221,6 +238,10 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
 
+    // Camera Zoom based on zoom percentage (6.0 down to 0.1)
+    const targetZ = 6.0 - (zoomPercent * 5.9);
+    camera.position.z += (targetZ - camera.position.z) * 0.1;
+
     // Mouse tracking interpolation (anlık ama yumuşak takip)
     targetX = mouseX * 0.5; // Max rotation angle
     targetY = mouseY * 0.5;
@@ -258,7 +279,6 @@ function animate() {
         backgroundParticles.rotation.y -= 0.0005;
     }
 
-    controls.update();
     composer.render();
 }
 
