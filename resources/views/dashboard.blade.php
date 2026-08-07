@@ -183,7 +183,7 @@
                     <h3 class="text-lg font-bold text-white">Feedback to Managers</h3>
                 </div>
                 
-                <div class="flex-grow flex flex-col-reverse p-4 gap-3 overflow-y-auto custom-scrollbar">
+                <div id="feedback-container" class="flex-grow flex flex-col-reverse p-4 gap-3 overflow-y-auto custom-scrollbar">
                     @forelse($feedbacks as $feedback)
                         <div class="bg-background/50 rounded-lg p-3 border border-secondary/20 {{ $feedback->user_id === auth()->id() ? 'ml-auto border-primary/30 bg-primary/10' : 'mr-auto' }} max-w-[85%]">
                             <div class="flex justify-between items-center mb-1 gap-4">
@@ -198,7 +198,7 @@
                 </div>
 
                 <div class="p-4 border-t border-secondary/30 bg-background/30 rounded-b-2xl">
-                    <form action="{{ route('feedbacks.store') }}" method="POST" class="flex gap-2">
+                    <form id="feedback-form" action="{{ route('feedbacks.store') }}" method="POST" class="flex gap-2">
                         @csrf
                         <input type="text" name="message" placeholder="Type your feedback..." required class="flex-grow bg-background border border-secondary/40 rounded-xl px-4 py-2 text-white text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
                         <button type="submit" class="px-4 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary/80 hover:shadow-lg transition-all">Send</button>

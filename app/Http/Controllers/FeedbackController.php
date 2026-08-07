@@ -12,10 +12,18 @@ class FeedbackController extends Controller
             'message' => 'required|string|max:1000',
         ]);
 
-        \App\Models\Feedback::create([
+        $feedback = \App\Models\Feedback::create([
             'user_id' => auth()->id(),
             'message' => $validated['message'],
         ]);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'feedback' => $feedback->load('user'),
+                'time' => $feedback->created_at->format('H:i')
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Feedback sent successfully!');
     }

@@ -37,3 +37,65 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+// Feedback Form AJAX Submission
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('feedback-form');
+    const container = document.getElementById('feedback-container');
+    const input = form ? form.querySelector('input[name="message"]') : null;
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const message = input.value;
+            if (!message.trim()) return;
+
+            const formData = new FormData(form);
+            const btn = form.querySelector('button');
+            const originalBtnText = btn.innerHTML;
+            
+            btn.disabled = true;
+            input.disabled = true;
+            btn.innerHTML = '...';
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': formData.get('_token')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const emptyMsg = container.querySelector('.text-center');
+                    if (emptyMsg) emptyMsg.remove();
+                    
+                    const html = `
+                        <div class="bg-background/50 rounded-lg p-3 border border-secondary/20 ml-auto border-primary/30 bg-primary/10 max-w-[85%]">
+                            <div class="flex justify-between items-center mb-1 gap-4">
+                                <span class="text-xs font-bold text-primary">You</span>
+                                <span class="text-[10px] text-secondary">${data.time}</span>
+                            </div>
+                            <p class="text-sm text-white/90">${data.feedback.message}</p>
+                        </div>
+                    `;
+                    
+                    container.insertAdjacentHTML('afterbegin', html);
+                    input.value = '';
+                    container.scrollTop = 0; // flex-col-reverse makes 0 the bottom
+                }
+            })
+            .catch(err => console.error(err))
+            .finally(() => {
+                btn.disabled = false;
+                input.disabled = false;
+                btn.innerHTML = originalBtnText;
+                input.focus();
+            });
+        });
+    }
+});

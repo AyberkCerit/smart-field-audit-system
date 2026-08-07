@@ -26,7 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/tasks/{task}/claim', [TaskController::class, 'claimTask'])->name('tasks.claim');
     Route::post('/tasks/{task}/complete', [TaskController::class, 'completeTask'])->name('tasks.complete');
     
-    Route::post('/feedbacks', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('feedbacks.store');
+    Route::post('/feedbacks', [\App\Http\Controllers\FeedbackController::class, 'store'])
+        ->name('feedbacks.store')
+        ->middleware('throttle:10,1');
     
     // Sadece Admin ve Manager
     Route::middleware(['role:admin|manager'])->group(function () {
