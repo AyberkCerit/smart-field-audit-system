@@ -75,18 +75,7 @@ class TaskController extends Controller
 
         // Bildirimler
         if ($task) {
-            $adminsAndManagers = \App\Models\User::role(['admin', 'manager'])->get();
-            \Illuminate\Support\Facades\Notification::send($adminsAndManagers, new \App\Notifications\NewTaskNotification($task, 'Yeni görev oluşturuldu: ' . $task->title));
-
-            if ($task->assigned_to) {
-                $assignedUser = \App\Models\User::find($task->assigned_to);
-                if ($assignedUser) {
-                    $assignedUser->notify(new \App\Notifications\NewTaskNotification($task, 'Size yeni bir görev atandı: ' . $task->title));
-                }
-            } else {
-                $fieldPersonnel = \App\Models\User::role('field_personnel')->get();
-                \Illuminate\Support\Facades\Notification::send($fieldPersonnel, new \App\Notifications\NewTaskNotification($task, 'Havuza yeni bir görev eklendi: ' . $task->title));
-            }
+            event(new \App\Events\TaskCreated($task));
         }
         
         return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
@@ -146,8 +135,7 @@ class TaskController extends Controller
         $task->update(['status' => $request->status]);
 
         if ($request->status === 'completed') {
-            $adminsAndManagers = \App\Models\User::role(['admin', 'manager'])->get();
-            \Illuminate\Support\Facades\Notification::send($adminsAndManagers, new \App\Notifications\TaskCompletedNotification($task));
+            event(new \App\Events\TaskCompleted($task));
         }
 
         return redirect()->back()->with('success', 'Task status updated successfully.');
@@ -228,8 +216,7 @@ class TaskController extends Controller
             $task->addMediaFromRequest('proof_photo')->toMediaCollection('task_proofs', 's3');
         });
 
-        $adminsAndManagers = \App\Models\User::role(['admin', 'manager'])->get();
-        \Illuminate\Support\Facades\Notification::send($adminsAndManagers, new \App\Notifications\TaskCompletedNotification($task));
+        event(new \App\Events\TaskCompleted($task));
 
         return redirect()->back()->with('success', 'Görev başarıyla tamamlandı.');
     }
