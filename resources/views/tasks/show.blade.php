@@ -36,8 +36,8 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Left Column: Task Info -->
-            <div class="space-y-6">
+            <!-- Left Column: Main Content -->
+            <div class="lg:col-span-2 space-y-6">
                 <!-- Basic Info Card -->
                 <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 md:p-8 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
                     <div class="flex flex-wrap gap-3 mb-6">
@@ -119,9 +119,31 @@
                 </div>
 
 
-            </div>
+            
+<!-- Map Card -->
+                <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Task Location
+                    </h3>
+                    
+                    @if($task->auditPoint)
+                        <div class="w-full rounded-xl overflow-hidden border border-secondary/30 relative z-0" style="height: 300px;">
+                            <div id="taskMap" class="absolute inset-0"></div>
+                        </div>
+                        <p class="text-sm text-secondary mt-3">
+                            <span class="font-medium text-text">Location:</span> {{ $task->auditPoint->name }}
+                        </p>
+                    @else
+                        <div class="flex flex-col items-center justify-center p-8 bg-background/50 rounded-xl border border-secondary/20">
+                            <svg class="w-12 h-12 text-secondary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <p class="text-secondary text-center">No location information for this task.</p>
+                        </div>
+                    @endif
+                </div>
+</div>
 
-            <!-- Middle Column: Details -->
+            <!-- Right Column: Sidebar -->
             <div class="space-y-6">
                 <!-- Personnel Info -->
                 <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
@@ -239,31 +261,7 @@
             @endif
             </div>
 
-            <!-- Right Column: Map Card -->
-            <div class="space-y-6">
-                <!-- Map Card -->
-                <div class="bg-card-dark rounded-2xl border border-secondary/30 p-6 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        Task Location
-                    </h3>
-                    
-                    @if($task->auditPoint)
-                        <div class="w-full rounded-xl overflow-hidden border border-secondary/30 relative z-0" style="height: 300px;">
-                            <div id="taskMap" class="absolute inset-0"></div>
-                        </div>
-                        <p class="text-sm text-secondary mt-3">
-                            <span class="font-medium text-text">Location:</span> {{ $task->auditPoint->name }}
-                        </p>
-                    @else
-                        <div class="flex flex-col items-center justify-center p-8 bg-background/50 rounded-xl border border-secondary/20">
-                            <svg class="w-12 h-12 text-secondary mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                            <p class="text-secondary text-center">No location information for this task.</p>
-                        </div>
-                    @endif
-                </div>
             </div>
-        </div>
     </div>
 
     @push('scripts')
