@@ -183,10 +183,6 @@ class TaskController extends Controller
     {
         $this->authorize('claim', $task);
 
-        if ($task->assigned_to !== null) {
-            return redirect()->back()->with('error', 'Bu görev zaten başkasına atanmış.');
-        }
-
         $task->update(['assigned_to' => auth()->id()]);
         return redirect()->back()->with('success', 'Görevi başarıyla devraldınız.');
     }
@@ -200,10 +196,6 @@ class TaskController extends Controller
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
-
-        if ($task->status === 'completed') {
-            return redirect()->back()->with('error', 'Görev zaten tamamlanmış.');
-        }
 
         // Mesafe hesaplama (Haversine formülü)
         if ($task->auditPoint) {
@@ -219,8 +211,10 @@ class TaskController extends Controller
             $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
             $distance = $earthRadius * $c;
 
-            if ($distance > 200) {
-                return redirect()->back()->with('error', 'Görev konumuna çok uzaksınız. (Mesafe: ' . round($distance) . 'm. Maksimum 200m olmalıdır.)');
+            $maxDistance = config('app.task_completion_radius', 200);
+
+            if ($distance > $maxDistance) {
+                return redirect()->back()->with('error', 'Görev konumuna çok uzaksınız. (Mesafe: ' . round($distance) . 'm. Maksimum ' . $maxDistance . 'm olmalıdır.)');
             }
         }
 
