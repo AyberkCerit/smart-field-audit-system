@@ -94,6 +94,7 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
+        $this->authorize('view', $task);
         $task->load(['auditPoint', 'assignedUser', 'manager']);
         return view('tasks.show', compact('task'));
     }
@@ -163,6 +164,7 @@ class TaskController extends Controller
 
     public function attachment(Task $task, \Spatie\MediaLibrary\MediaCollections\Models\Media $media)
     {
+        $this->authorize('view', $task);
         abort_if($media->model_id !== $task->id, 403);
         
         return response()->stream(function () use ($media) {
@@ -179,6 +181,8 @@ class TaskController extends Controller
 
     public function claimTask(\Illuminate\Http\Request $request, Task $task)
     {
+        $this->authorize('claim', $task);
+
         if ($task->assigned_to !== null) {
             return redirect()->back()->with('error', 'Bu görev zaten başkasına atanmış.');
         }
@@ -189,6 +193,8 @@ class TaskController extends Controller
 
     public function completeTask(\Illuminate\Http\Request $request, Task $task)
     {
+        $this->authorize('complete', $task);
+
         $request->validate([
             'proof_photo' => 'required|image|max:10240', // 10MB
             'latitude' => 'required|numeric',
