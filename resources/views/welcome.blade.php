@@ -5,14 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name', 'Smart Field Audit System') }}</title>
     
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800|orbitron:400,700,900&display=swap" rel="stylesheet" />
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}?v={{ time() }}">
+
+    <!-- amCharts 5 Kütüphaneleri -->
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 </head>
 <body class="antialiased selection:bg-accent selection:text-white min-h-screen flex flex-col relative overflow-x-hidden">
     
@@ -30,13 +37,13 @@
         <div class="fixed inset-0 flex flex-col items-center justify-center pointer-events-none">
             
             <!-- Welcome Text -->
-            <h1 class="text-3xl md:text-5xl font-display font-extrabold text-white text-center mb-12 tracking-wide glow-accent relative z-10 pointer-events-none transition-opacity duration-75">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-white text-center mb-12 tracking-wide relative z-10 pointer-events-none transition-opacity duration-75">
                 Welcome, scroll for manage your field
             </h1>
 
             <!-- Center: 3D Animation (Full Screen) -->
             <div id="canvas-container" class="absolute inset-0 w-full h-full z-0 pointer-events-auto">
-                <div id="loading-message" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-accent font-display font-bold tracking-widest text-sm glow-accent animate-pulse">LOADING...</div>
+                <div id="loading-message" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-accent font-bold tracking-widest text-sm glow-accent animate-pulse">LOADING...</div>
             </div>
 
             <!-- Scroll Indicator Icon -->
@@ -52,13 +59,15 @@
         </div>
 
         <!-- Scrollable Content Sections -->
-        <div class="relative z-20 w-full flex flex-col items-center" style="background-color: #171717; margin-top: 130vh; padding-top: 4rem;">
+        <div class="relative z-20 w-full flex flex-col items-center scrollable-content-wrapper">
             
             <!-- Section 1 -->
-            <div class="w-full max-w-5xl px-6 py-24 min-h-screen flex items-center">
-                <div class="glass p-12 rounded-3xl border border-primary/30 shadow-[0_0_40px_rgba(27,95,197,0.15)] flex flex-col md:flex-row gap-12 items-center">
-                    <div class="flex-1">
-                        <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Intelligent <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent glow-primary">Field Audits</span></h2>
+            <div class="w-full max-w-6xl px-6 py-24 min-h-screen flex items-center">
+                <div class="w-full p-4 md:p-8 flex flex-col md:flex-row gap-8 items-center">
+                    
+                    <!-- Left Side: Text (2/3) -->
+                    <div class="w-full md:w-2/3">
+                        <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Intelligent <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Field Audits</span></h2>
                         <p class="text-secondary text-lg leading-relaxed mb-8">
                             Transform how your field teams operate. Smart Field Audit System uses advanced AI and networking capabilities to keep your workforce connected, monitor operations in real-time, and seamlessly integrate all field data into one powerful dashboard.
                         </p>
@@ -69,7 +78,7 @@
                             </li>
                             <li class="flex items-center gap-3">
                                 <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                AI-driven insights & reporting
+                                file operations and management.
                             </li>
                             <li class="flex items-center gap-3">
                                 <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -77,17 +86,23 @@
                             </li>
                         </ul>
                     </div>
+
+                    <!-- Right Side: Globe Animation (1/3) -->
+                    <div class="w-full md:w-1/3 h-[400px] relative">
+                        <div id="chartdiv" class="w-full h-full cursor-crosshair"></div>
+                    </div>
+
                 </div>
             </div>
 
             <!-- Section 2 / Call to Action -->
             <div class="w-full max-w-5xl px-6 py-24 min-h-[50vh] flex flex-col items-center justify-center text-center">
-                <h2 class="text-4xl font-display font-bold text-white mb-6">Ready to upgrade your workflow?</h2>
+                <h2 class="text-4xl font-bold text-white mb-6">Ready to upgrade your workflow?</h2>
                 <p class="text-secondary text-lg max-w-2xl mb-10">
                     Join the future of field management. Get started today and bring your entire operation into a single, cohesive network.
                 </p>
                 <div class="flex flex-wrap gap-4 justify-center">
-                    <a href="{{ route('login') }}" class="px-10 py-4 rounded-xl bg-gradient-to-r from-primary to-accent text-white font-bold text-lg hover:opacity-90 transition-all shadow-[0_0_20px_rgba(31,201,221,0.4)] hover:shadow-[0_0_30px_rgba(31,201,221,0.6)]">
+                    <a href="{{ route('login') }}" class="px-10 py-4 rounded-xl bg-[#a4d756] hover:bg-[#91c342] text-gray-900 font-bold text-lg hover:-translate-y-1 transition-all duration-300">
                         Login to Dashboard
                     </a>
                     @if (Route::has('register'))

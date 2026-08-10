@@ -1,5 +1,4 @@
 body { font-family: 'Inter', sans-serif; background-color: #171717; color: #dedede; }
-.font-display { font-family: 'Orbitron', sans-serif; }
 
 /* Glassmorphism */
 .glass {
@@ -25,4 +24,16 @@ body { font-family: 'Inter', sans-serif; background-color: #171717; color: #dede
 }
 .animate-scan {
     animation: scan 3s ease-in-out infinite alternate;
+}
+
+/* Scrollable Content */
+.scrollable-content-wrapper {
+    background-color: #171717;
+    margin-top: 130vh;
+    padding-top: 4rem;
+}
+
+/* Hide amCharts Watermark Logo */
+#chartdiv a[href^="https://www.amcharts.com"] {
+    display: none !important;
 }

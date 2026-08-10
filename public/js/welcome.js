@@ -7,7 +7,7 @@ let networkSignals = [];
 
 let container;
 let loadingMessage;
-const BRAIN_MODEL_URL = null; 
+const BRAIN_MODEL_URL = null;
 
 let sceneGroup;
 let mouseX = 0;
@@ -22,7 +22,7 @@ function init() {
     console.log("Three.js init started");
     container = document.getElementById('canvas-container');
     loadingMessage = document.getElementById('loading-message');
-    
+
     if (!container) {
         console.error("Canvas container not found!");
         return;
@@ -33,8 +33,8 @@ function init() {
     const height = container.clientHeight || 500;
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x171717); 
-    
+    scene.background = new THREE.Color(0x171717);
+
     sceneGroup = new THREE.Group();
     scene.add(sceneGroup);
 
@@ -58,9 +58,9 @@ function init() {
 
     const bloomPass = new THREE.UnrealBloomPass(
         new THREE.Vector2(width, height),
-        2.0, 
-        0.2, 
-        0.6  
+        2.0,
+        0.2,
+        0.6
     );
     composer.addPass(bloomPass);
 
@@ -78,7 +78,7 @@ function init() {
     window.addEventListener('resize', onWindowResize, false);
     document.addEventListener('mousemove', onDocumentMouseMove, false);
     window.addEventListener('scroll', onScroll, false);
-    
+
     animate();
 }
 
@@ -95,7 +95,7 @@ function onScroll() {
     const welcomeText = document.querySelector('h1');
     const scrollIndicator = document.querySelector('.bottom-0');
     const opacity = Math.max(0, 1 - (zoomPercent * 4)); // Fades out completely by 25% scroll
-    
+
     if (welcomeText) welcomeText.style.opacity = opacity;
     if (scrollIndicator) scrollIndicator.style.opacity = opacity;
 }
@@ -110,8 +110,8 @@ function createGlobeNetwork() {
     networkGroup = new THREE.Group();
     sceneGroup.add(networkGroup);
 
-    const RADIUS = 2.8; 
-    const NODE_COUNT = 40; 
+    const RADIUS = 2.8;
+    const NODE_COUNT = 40;
     const nodes = [];
 
     const nodeGeometry = new THREE.BufferGeometry();
@@ -124,7 +124,7 @@ function createGlobeNetwork() {
         const x = RADIUS * Math.cos(theta) * Math.sin(phi);
         const y = RADIUS * Math.sin(theta) * Math.sin(phi);
         const z = RADIUS * Math.cos(phi);
-        
+
         const vector = new THREE.Vector3(x, y, z);
         nodes.push(vector);
         nodeVertices.push(x, y, z);
@@ -140,9 +140,9 @@ function createGlobeNetwork() {
     for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
             const dist = nodes[i].distanceTo(nodes[j]);
-            if (dist < 4.0 && Math.random() > 0.6) { 
+            if (dist < 4.0 && Math.random() > 0.6) {
                 let midPoint = nodes[i].clone().add(nodes[j]).multiplyScalar(0.5);
-                midPoint.normalize().multiplyScalar(RADIUS + dist * 0.3); 
+                midPoint.normalize().multiplyScalar(RADIUS + dist * 0.3);
 
                 const curve = new THREE.QuadraticBezierCurve3(nodes[i], midPoint, nodes[j]);
                 networkCurves.push(curve);
@@ -155,9 +155,9 @@ function createGlobeNetwork() {
         }
     }
 
-    const SIGNAL_COUNT = 25; 
+    const SIGNAL_COUNT = 25;
     const signalGeometry = new THREE.SphereGeometry(0.03, 8, 8);
-    const signalMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff }); 
+    const signalMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
     for (let i = 0; i < SIGNAL_COUNT; i++) {
         const signalMesh = new THREE.Mesh(signalGeometry, signalMaterial);
@@ -165,9 +165,9 @@ function createGlobeNetwork() {
 
         networkSignals.push({
             mesh: signalMesh,
-            curveIndex: Math.floor(Math.random() * networkCurves.length), 
-            progress: Math.random(), 
-            speed: 0.003 + Math.random() * 0.005 
+            curveIndex: Math.floor(Math.random() * networkCurves.length),
+            progress: Math.random(),
+            speed: 0.003 + Math.random() * 0.005
         });
     }
 }
@@ -186,7 +186,7 @@ function createBackgroundParticles() {
 
 function createPlaceholderBrain() {
     const geometry = new THREE.IcosahedronGeometry(1.5, 16);
-    
+
     const wireframeGeometry = new THREE.WireframeGeometry(geometry);
     const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0x1b5fc5, transparent: true, opacity: 0.2 });
     const wireframeBrain = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
@@ -197,7 +197,7 @@ function createPlaceholderBrain() {
     brainModel = new THREE.Group();
     brainModel.add(wireframeBrain);
     brainModel.add(pointsBrain);
-    
+
     sceneGroup.add(brainModel);
 }
 
@@ -215,7 +215,7 @@ function loadBrainModel(url) {
                 const pointsMaterial = new THREE.PointsMaterial({ color: 0x1fc9dd, size: 0.02, transparent: true, opacity: 0.7 });
                 const points = new THREE.Points(child.geometry, pointsMaterial);
 
-                child.material = new THREE.MeshBasicMaterial({ visible: false }); 
+                child.material = new THREE.MeshBasicMaterial({ visible: false });
                 child.add(wireframe);
                 child.add(points);
             }
@@ -226,7 +226,7 @@ function loadBrainModel(url) {
 }
 
 function onWindowResize() {
-    if(!container) return;
+    if (!container) return;
     const width = container.clientWidth;
     const height = container.clientHeight;
     camera.aspect = width / height;
@@ -245,7 +245,7 @@ function animate() {
     // Mouse tracking interpolation (anlık ama yumuşak takip)
     targetX = mouseX * 0.5; // Max rotation angle
     targetY = mouseY * 0.5;
-    
+
     if (sceneGroup) {
         sceneGroup.rotation.y += (targetX - sceneGroup.rotation.y) * 0.1;
         sceneGroup.rotation.x += (-targetY - sceneGroup.rotation.x) * 0.1;
@@ -256,14 +256,14 @@ function animate() {
     }
 
     if (networkGroup) {
-        networkGroup.rotation.y += 0.001; 
+        networkGroup.rotation.y += 0.001;
         networkGroup.rotation.x += 0.0005;
 
         networkSignals.forEach(signal => {
             signal.progress += signal.speed;
-            
+
             if (signal.progress >= 1.0) {
-                signal.progress = 0; 
+                signal.progress = 0;
                 signal.curveIndex = Math.floor(Math.random() * networkCurves.length);
             }
 
@@ -287,4 +287,231 @@ if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
     init();
+}
+
+// --- amCharts Globe Animation ---
+function initAmChartsGlobe() {
+    var chartdiv = document.getElementById("chartdiv");
+    if (!chartdiv) return;
+
+    var root = am5.Root.new("chartdiv");
+
+    // Remove amCharts watermark
+    if (root._logo) {
+        root._logo.dispose();
+    }
+
+    var cyberTheme = am5.Theme.new(root);
+    cyberTheme.rule("InterfaceColors").setAll({
+        primaryButton: am5.color(0x004488),
+        primaryButtonHover: am5.color(0x0066cc),
+        primaryButtonDown: am5.color(0x002244),
+        primaryButtonActive: am5.color(0x00ffff),
+        primaryButtonText: am5.color(0xffffff),
+        background: am5.color(0x000210),
+        text: am5.color(0x00ffff)
+    });
+
+    root.setThemes([am5themes_Animated.new(root), cyberTheme]);
+
+    root.container.set("background", am5.Rectangle.new(root, {
+        fill: am5.color(0x000210),
+        fillOpacity: 0
+    }));
+
+    var gridLineColor = am5.color(0x002244);
+    var neonBlue = am5.color(0x0088ff);
+    var neonCyan = am5.color(0x00ffff);
+    var landFill = am5.color(0x001122);
+    var dataNodeCore = am5.color(0xffffff);
+
+    var mapChart = root.container.children.push(am5map.MapChart.new(root, {
+        panX: "none",
+        panY: "none",
+        projection: am5map.geoOrthographic(),
+        rotationX: -15,
+        rotationY: -20,
+        minZoomLevel: 0.5,
+        zoomLevel: 1.0
+    }));
+
+    var bgSeries = mapChart.series.push(am5map.MapPolygonSeries.new(root, {}));
+    bgSeries.mapPolygons.template.setAll({
+        fill: am5.color(0x000418),
+        fillOpacity: 0,
+        strokeOpacity: 0
+    });
+    bgSeries.data.push({ geometry: am5map.getGeoRectangle(90, 180, -90, -180) });
+
+    var graticuleSeries = mapChart.series.push(am5map.GraticuleSeries.new(root, {}));
+    graticuleSeries.mapLines.template.setAll({
+        stroke: gridLineColor,
+        strokeOpacity: 0.4,
+        strokeWidth: 0.5
+    });
+
+    var polygonSeries = mapChart.series.push(am5map.MapPolygonSeries.new(root, {
+        geoJSON: am5geodata_worldLow
+    }));
+    polygonSeries.mapPolygons.template.setAll({
+        fill: landFill,
+        stroke: neonBlue,
+        strokeWidth: 0.5,
+        strokeOpacity: 0.4
+    });
+
+    var dataCenters = ["BR", "VN", "CO", "ET", "ID", "HN"];
+    var cloudHubs = ["DE", "BE", "IT", "US"];
+    var edgeNodes = ["FR", "PL", "SE", "RU", "GB", "NL", "GR", "AT", "CA", "JP"];
+
+    polygonSeries.events.on("datavalidated", function () {
+        am5.array.each(polygonSeries.dataItems, function (di) {
+            var id = di.get("id");
+            if (id && dataCenters.includes(id)) {
+                di.get("mapPolygon").setAll({ fill: am5.color(0x002244) });
+            } else if (id && cloudHubs.includes(id)) {
+                di.get("mapPolygon").setAll({ fill: am5.color(0x003366) });
+            } else if (id && edgeNodes.includes(id)) {
+                di.get("mapPolygon").setAll({ fill: am5.color(0x001a33) });
+            }
+        });
+    });
+
+    var sankeySeries = mapChart.series.push(am5map.MapSankeySeries.new(root, {
+        polygonSeries: polygonSeries,
+        maxWidth: 2,
+        controlPointDistance: 0.4,
+        resolution: 60,
+        nodePadding: 0.3
+    }));
+
+    var pistachioGreen = am5.color(0xa4d756);
+
+    sankeySeries.mapPolygons.template.setAll({
+        fill: pistachioGreen,
+        fillOpacity: 0.3,
+        strokeOpacity: 0,
+        tooltipText: "{sourceNode.name} > {targetNode.name}\n[bold #00ffff]{value} TB/s[/]"
+    });
+
+    sankeySeries.nodes.mapPolygons.template.setAll({
+        fill: pistachioGreen,
+        stroke: am5.color(0xffffff),
+        strokeWidth: 1,
+        fillOpacity: 0.7,
+        strokeOpacity: 1,
+        tooltipText: "{name}\n[bold #00ffff]{sum} TB/s Toplam Veri[/]"
+    });
+
+    sankeySeries.bullets.push(function () {
+        return am5.Bullet.new(root, {
+            locationX: 0,
+            autoRotate: true,
+            sprite: am5.Graphics.new(root, {
+                svgPath: "M0,-4 L8,0 L0,4 L-2,0 Z",
+                fill: dataNodeCore,
+                stroke: pistachioGreen,
+                strokeWidth: 1,
+                centerX: am5.p50,
+                centerY: am5.p50,
+                scale: 0.4,
+                visible: false
+            })
+        });
+    });
+
+    sankeySeries.data.setAll([
+        { sourceId: "BR", targetId: "DE", value: 350 },
+        { sourceId: "BR", targetId: "US", value: 450 },
+        { sourceId: "BR", targetId: "IT", value: 200 },
+        { sourceId: "VN", targetId: "DE", value: 200 },
+        { sourceId: "VN", targetId: "BE", value: 150 },
+        { sourceId: "CO", targetId: "US", value: 250 },
+        { sourceId: "CO", targetId: "DE", value: 80 },
+        { sourceId: "ET", targetId: "DE", value: 60 },
+        { sourceId: "ID", targetId: "US", value: 80 },
+        { sourceId: "HN", targetId: "DE", value: 60 },
+        { sourceId: "DE", targetId: "FR", value: 150 },
+        { sourceId: "DE", targetId: "PL", value: 100 },
+        { sourceId: "DE", targetId: "SE", value: 80 },
+        { sourceId: "BE", targetId: "GB", value: 100 },
+        { sourceId: "IT", targetId: "GR", value: 50 },
+        { sourceId: "US", targetId: "CA", value: 120 },
+        { sourceId: "US", targetId: "JP", value: 80 }
+    ]);
+
+    var countryNames = {
+        BR: "Brezilya Veri Merkezi", VN: "Vietnam Sunucuları", CO: "Kolombiya", ET: "Etiyopya",
+        ID: "Endonezya", HN: "Honduras", DE: "Almanya (Ana Bulut)", BE: "Belçika (Ana Bulut)",
+        IT: "İtalya (Ana Bulut)", US: "ABD (Ana Bulut)", FR: "Fransa", PL: "Polonya",
+        SE: "İsveç", RU: "Rusya", GB: "Birleşik Krallık", NL: "Hollanda",
+        GR: "Yunanistan", AT: "Avusturya", CA: "Kanada", JP: "Japonya"
+    };
+
+    sankeySeries.events.on("datavalidated", function () {
+        am5.array.each(sankeySeries.nodes.dataItems, function (di) {
+            var id = di.get("id");
+            if (id && countryNames[id]) {
+                di.set("name", countryNames[id]);
+            }
+        });
+
+        am5.array.each(sankeySeries.dataItems, function (dataItem) {
+            var bullets = dataItem.bullets;
+            if (bullets) {
+                am5.array.each(bullets, function (bullet) {
+                    var randomDur = 1500 + Math.random() * 2000;
+                    var delay = Math.random() * randomDur;
+                    setTimeout(function () {
+                        var sprite = bullet.get("sprite");
+                        if (sprite) sprite.set("visible", true);
+                        bullet.animate({
+                            key: "locationX",
+                            from: 0,
+                            to: 1,
+                            duration: randomDur,
+                            easing: am5.ease.linear,
+                            loops: Infinity
+                        });
+                    }, delay);
+                });
+            }
+        });
+    });
+
+    var targetRotationX = -15;
+    var targetRotationY = -20;
+    var currentRotationX = -15;
+    var currentRotationY = -20;
+
+    document.getElementById("chartdiv").addEventListener("mousemove", function (e) {
+        var rect = this.getBoundingClientRect();
+        var mouseX = e.clientX - rect.left;
+        var mouseY = e.clientY - rect.top;
+
+        var dx = (mouseX - rect.width / 2) / (rect.width / 2);
+        var dy = (mouseY - rect.height / 2) / (rect.height / 2);
+
+        targetRotationX = -15 + (dx * 120);
+        targetRotationY = -20 + (dy * -45);
+    });
+
+    function updateGlobeRotation() {
+        currentRotationX += (targetRotationX - currentRotationX) * 0.05;
+        currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+
+        mapChart.set("rotationX", currentRotationX);
+        mapChart.set("rotationY", currentRotationY);
+
+        requestAnimationFrame(updateGlobeRotation);
+    }
+
+    updateGlobeRotation();
+    mapChart.appear(1000, 100);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAmChartsGlobe);
+} else {
+    initAmChartsGlobe();
 }
