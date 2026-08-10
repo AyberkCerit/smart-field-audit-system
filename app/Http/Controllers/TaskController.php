@@ -45,38 +45,9 @@ class TaskController extends Controller
         return view('tasks.create', compact('users'));
     }
 
-    public function store(StoreTaskRequest $request)
+    public function store(StoreTaskRequest $request, \App\Actions\Tasks\CreateTaskAction $action)
     {
-        $data = $request->validated();
-        $task = null;
-
-        \Illuminate\Support\Facades\DB::transaction(function () use ($data, $request, &$task) {
-            $auditPoint = \App\Models\AuditPoint::create([
-                'name' => $data['title'] . ' (Task Area)',
-                'description' => 'Automatically added when creating a task from the map.',
-                'category' => 'task_specific',
-                'latitude' => $data['latitude'],
-                'longitude' => $data['longitude'],
-                'is_active' => true,
-            ]);
-
-            unset($data['latitude'], $data['longitude']);
-
-            $data['audit_point_id'] = $auditPoint->id;
-            $data['assigned_manager'] = auth()->id();
-            $data['status'] = 'pending';
-            $task = Task::create($data);
-            
-            if ($request->hasFile('attachment')) {
-                // Upload to S3 (MinIO) using Spatie MediaLibrary
-                $task->addMediaFromRequest('attachment')->toMediaCollection('task_attachments', 's3');
-            }
-        });
-
-        // Bildirimler
-        if ($task) {
-            event(new \App\Events\TaskCreated($task));
-        }
+        $action->execute($request->validated(), $request);
         
         return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
