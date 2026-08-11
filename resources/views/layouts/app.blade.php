@@ -18,6 +18,7 @@
         @stack('styles')
     </head>
     <body class="bg-background text-text min-h-screen w-full font-sans overflow-x-hidden">
+        <x-page-loader />
         <!-- Navbar Container -->
         <x-navbar />
 

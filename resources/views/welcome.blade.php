@@ -22,6 +22,7 @@
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 </head>
 <body class="antialiased selection:bg-accent selection:text-white min-h-screen flex flex-col relative overflow-x-hidden">
+    <x-page-loader />
     
     <!-- Background Abstract Shapes -->
     <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -68,19 +69,19 @@
                     <!-- Left Side: Text (2/3) -->
                     <div class="w-full md:w-2/3">
                         <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 fade-in-up">Intelligent <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Field Audits</span></h2>
-                        <p class="text-secondary text-lg leading-relaxed mb-8 fade-in-up" style="transition-delay: 100ms;">
+                        <p class="text-secondary text-lg leading-relaxed mb-8 fade-in-up delay-100">
                             Transform how your field teams operate. Smart Field Audit System uses networking capabilities to keep your workforce connected, monitor operations in real-time, and seamlessly integrate all field data into one powerful dashboard.
                         </p>
                         <ul class="flex flex-col gap-4 text-white/80">
-                            <li class="flex items-center gap-3 fade-in-up" style="transition-delay: 200ms;">
+                            <li class="flex items-center gap-3 fade-in-up delay-200">
                                 <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 Real-time location tracking
                             </li>
-                            <li class="flex items-center gap-3 fade-in-up" style="transition-delay: 300ms;">
+                            <li class="flex items-center gap-3 fade-in-up delay-400">
                                 <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 file operations and management.
                             </li>
-                            <li class="flex items-center gap-3 fade-in-up" style="transition-delay: 400ms;">
+                            <li class="flex items-center gap-3 fade-in-up delay-600">
                                 <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                 Instant feedback communication
                             </li>

@@ -1,0 +1,8 @@
+/* Prevent scrolling while loader is active */
+body.loading-active {
+    overflow: hidden !important;
+}
+
+#global-page-loader {
+    z-index: 9999;
+}

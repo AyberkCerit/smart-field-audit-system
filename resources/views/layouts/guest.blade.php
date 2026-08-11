@@ -28,6 +28,7 @@
     <link href="{{ asset('css/login.css') }}" rel="stylesheet">
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen flex flex-col">
+<x-page-loader />
 
 <main class="flex-grow flex flex-col md:flex-row overflow-hidden relative">
     

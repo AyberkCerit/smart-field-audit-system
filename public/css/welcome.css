@@ -43,8 +43,17 @@ body { font-family: 'Inter', sans-serif; background-color: #171717; color: #dede
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    /* Default delay is 0 so they hide instantly when scrolled out */
 }
 .fade-in-up.visible {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Staggered delays only apply when entering (.visible) */
+.delay-100.visible { transition-delay: 100ms; }
+.delay-200.visible { transition-delay: 200ms; }
+.delay-300.visible { transition-delay: 300ms; }
+.delay-400.visible { transition-delay: 400ms; }
+.delay-500.visible { transition-delay: 500ms; }
+.delay-600.visible { transition-delay: 600ms; }
