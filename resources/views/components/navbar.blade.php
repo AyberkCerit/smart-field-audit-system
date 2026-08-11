@@ -6,8 +6,24 @@
         
         <a href="{{ route('dashboard') }}" class="flex items-center gap-3 cursor-pointer group">
             <!-- Logo Icon -->
-            <div class="w-9 h-9 rounded-xl bg-white/10 border border-white/30 flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(0,0,0,0.1)] text-sm tracking-widest transition-all group-hover:scale-105">
-                SD
+            <div class="w-10 h-10 flex items-center justify-center transition-transform duration-500 group-hover:rotate-180">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[0_0_12px_rgba(31,201,221,0.3)]">
+                    <!-- Orbit Ring (Two symmetrical arcs) -->
+                    <circle cx="20" cy="20" r="13" stroke="url(#orbit-grad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="30 10.84" transform="rotate(-45 20 20)" />
+                    
+                    <!-- Central Rounded Diamond -->
+                    <rect x="14" y="14" width="12" height="12" rx="3" fill="#a4d756" transform="rotate(45 20 20)" />
+                    
+                    <!-- Data Node (Floating Dot) -->
+                    <circle cx="34" cy="6" r="2.5" fill="#1fc9dd" />
+
+                    <defs>
+                        <linearGradient id="orbit-grad" x1="7" y1="7" x2="33" y2="33" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#1fc9dd" />
+                            <stop offset="1" stop-color="#1b5fc5" />
+                        </linearGradient>
+                    </defs>
+                </svg>
             </div>
             <!-- Brand Name -->
             <span class="text-xl font-bold text-white tracking-wide group-hover:opacity-80 transition-opacity">FieldAudit</span>

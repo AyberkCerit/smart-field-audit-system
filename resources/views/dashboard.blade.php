@@ -102,13 +102,30 @@
                         </div>
                         <h3 class="text-lg font-bold text-white">Personnel Feedbacks</h3>
                     </div>
-                    <div>
-                        <select id="chat-user-select" class="bg-background border border-secondary/40 rounded-xl px-3 py-1.5 text-white text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                    <div class="flex items-center gap-2">
+                        <!-- Hidden Select to keep JS logic intact -->
+                        <select id="chat-user-select" class="hidden">
                             <option value="">Select a user...</option>
                             @foreach($chatUsers as $u)
                                 <option value="{{ $u->id }}">{{ $u->name }}</option>
                             @endforeach
                         </select>
+                        
+                        <!-- Avatar Group -->
+                        <div class="flex items-center -space-x-3 hover:space-x-1 transition-all duration-300 px-2 py-1 overflow-x-auto custom-scrollbar max-w-[250px] md:max-w-[400px]">
+                            @foreach($chatUsers as $u)
+                                <button type="button" onclick="selectChatUser('{{ $u->id }}', this)" 
+                                        class="chat-user-avatar relative w-9 h-9 rounded-full border-2 border-card-dark bg-gradient-to-br from-primary/60 to-accent/60 flex-shrink-0 flex items-center justify-center hover:z-10 transition-all hover:scale-110 shadow-md group" 
+                                        title="{{ $u->name }}">
+                                    <span class="text-xs font-bold text-white tracking-wider">{{ strtoupper(substr($u->name, 0, 2)) }}</span>
+                                    
+                                    <!-- Tooltip -->
+                                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible bg-background border border-secondary/30 text-white text-[10px] px-2 py-1 rounded-md whitespace-nowrap transition-all pointer-events-none z-50 shadow-lg">
+                                        {{ $u->name }}
+                                    </div>
+                                </button>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
                 
@@ -254,6 +271,22 @@
             // Using window object to pass backend data to map JS file
             window.dashboardMapPoints = @json($auditPoints ?? []);
             window.defaultMapView = '{{ $mapDefaultView ?? "hybrid" }}';
+            
+            function selectChatUser(userId, buttonElement) {
+                const select = document.getElementById('chat-user-select');
+                if(select) {
+                    select.value = userId;
+                    select.dispatchEvent(new Event('change'));
+                }
+                
+                document.querySelectorAll('.chat-user-avatar').forEach(btn => {
+                    btn.classList.remove('ring-2', 'ring-accent', 'ring-offset-2', 'ring-offset-card-dark', 'z-10', 'scale-110', 'border-accent');
+                    btn.classList.add('border-card-dark');
+                });
+                
+                buttonElement.classList.add('ring-2', 'ring-accent', 'ring-offset-2', 'ring-offset-card-dark', 'z-10', 'scale-110', 'border-accent');
+                buttonElement.classList.remove('border-card-dark');
+            }
         </script>
         <script defer src="{{ asset('js/dashboard.js') }}?v={{ time() }}"></script>
     @endpush

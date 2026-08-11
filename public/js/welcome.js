@@ -157,7 +157,7 @@ function createGlobeNetwork() {
 
     const SIGNAL_COUNT = 25;
     const signalGeometry = new THREE.SphereGeometry(0.03, 8, 8);
-    const signalMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const signalMaterial = new THREE.MeshBasicMaterial({ color: 0x33ff55 }); // Daha belirgin, sarıya çalmayan parlak yeşil
 
     for (let i = 0; i < SIGNAL_COUNT; i++) {
         const signalMesh = new THREE.Mesh(signalGeometry, signalMaterial);
