@@ -25,13 +25,15 @@ WORKDIR /var/www
 
 COPY . .
 
-RUN composer install --no-interaction --optimize-autoloader
+# --no-dev parametresi eklendi
+RUN composer install --no-interaction --no-dev --optimize-autoloader
 
 # Build frontend assets
 RUN npm ci && npm run build
 
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
 EXPOSE 8000
 
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
