@@ -1,35 +1,55 @@
-# Akıllı Saha Denetim Sistemi (Smart Field Audit System)
+<div align="right">
+  🇬🇧 <b>English</b> | <a href="README.tr.md">🇹🇷 Türkçe</a>
+</div>
 
-Akıllı Saha Denetim Sistemi, saha personellerinin, bölge yöneticilerinin ve sistem yöneticilerinin saha operasyonlarını, görev dağılımlarını ve denetim süreçlerini dijital ortamda sorunsuz ve verimli bir şekilde yönetmelerini sağlayan kapsamlı bir Laravel web uygulamasıdır.
+# Smart Field Audit System
 
-## 🚀 Temel Özellikler
+The Smart Field Audit System is a comprehensive Laravel web application that allows field personnel, regional managers, and system administrators to manage field operations, task distributions, and audit processes smoothly and efficiently in a digital environment.
 
-- **Gelişmiş Rol ve İzin Yönetimi (RBAC)**
-  - **Admin:** Tüm sistemi, kullanıcıları ve ayarları yönetir.
-  - **Yönetici (Manager):** Saha personellerine görev atar, denetim noktalarını yönetir ve süreçleri takip eder.
-  - **Saha Personeli (Field Personnel):** Kendisine atanan görevleri üstlenir (claim), tamamlar ve kanıt niteliğinde dosya/fotoğraf ekleyebilir.
+## 📸 Screenshots
 
-- **Görev ve Operasyon Yönetimi**
-  - Görev oluşturma, atama, durum güncelleme (bekliyor, devam ediyor, tamamlandı vb.).
-  - Görevlere kanıt niteliğinde çoklu dosya ve medya yükleme (Spatie Media Library altyapısı ile).
+The following screenshots give an idea about the general look and operation of the system:
 
-- **Denetim Noktaları (Audit Points) ve Harita Entegrasyonu**
-  - Coğrafi konum (enlem/boylam) destekli denetim noktaları.
-  - **Leaflet.js** entegrasyonu sayesinde harita üzerinden konum seçme ve görüntüleme.
+**1. Welcome Screen**
+![Welcome Screen](screenshots/welcome.png)
 
-- **İzlenebilirlik ve Güvenlik**
-  - Tüm kritik işlemlerin (CRUD) arka planda otomatik olarak kayıt altına alınması (Spatie Activitylog).
-  - Aktivite geçmişi (Activity Logs) ekranı ile kimin, ne zaman, hangi işlemi yaptığının takibi.
+**2. Features and Presentation**
+![Features](screenshots/features.png)
 
-- **Geri Bildirim ve Bildirim Sistemi**
-  - Personeller ve yöneticiler arası geri bildirim geçmişi.
-  - Yeni bir olay olduğunda sistem içi anlık bildirim (Notification) altyapısı.
+**3. Login Page**
+![Login Screen](screenshots/login.png)
 
-- **Dışa Aktarma ve Raporlama**
-  - Excel (Maatwebsite Excel) ve PDF (DomPDF) formatlarında zengin rapor çıktısı alabilme yeteneği.
-  - Denetim noktaları için QR Kod (Simple Qrcode) üretimi.
+**4. Dashboard**
+![Dashboard](screenshots/dashboard.png)
 
-## 🛠️ Kullanılan Teknolojiler ve Paketler
+## 🚀 Key Features
+
+- **Advanced Role and Permission Management (RBAC)**
+  - **Admin:** Manages the entire system, users, and settings.
+  - **Manager:** Assigns tasks to field personnel, manages audit points, and tracks processes.
+  - **Field Personnel:** Claims assigned tasks, completes them, and can attach files/photos as evidence.
+
+- **Task and Operations Management**
+  - Task creation, assignment, and status updates (pending, in progress, completed, etc.).
+  - Uploading multiple files and media to tasks as evidence (powered by Spatie Media Library).
+
+- **Audit Points and Map Integration**
+  - Geolocation (latitude/longitude) supported audit points.
+  - **Leaflet.js** integration to select and view locations directly on the map.
+
+- **Traceability and Security**
+  - Automatic background logging of all critical operations (CRUD) using Spatie Activitylog.
+  - Activity Logs screen to track who did what and when.
+
+- **Feedback and Notification System**
+  - Communication and feedback history between personnel and managers.
+  - Real-time in-system notifications for new events.
+
+- **Export and Reporting**
+  - Rich report generation in Excel (Maatwebsite Excel) and PDF (DomPDF) formats.
+  - QR Code (Simple Qrcode) generation for audit points.
+
+## 🛠️ Technologies and Packages Used
 
 **Backend**
 - PHP 8.3+
@@ -37,60 +57,60 @@ Akıllı Saha Denetim Sistemi, saha personellerinin, bölge yöneticilerinin ve 
 - MySQL / SQLite
 
 **Frontend**
-- Tailwind CSS (Stil)
-- Alpine.js (Etkileşim)
-- Vite (Asset Yönetimi)
-- Leaflet.js (Haritalar)
-- Anime.js (Animasyonlar)
+- Tailwind CSS (Styling)
+- Alpine.js (Interactivity)
+- Vite (Asset Management)
+- Leaflet.js (Maps)
+- Anime.js (Animations)
 
-**Öne Çıkan Laravel Paketleri**
-- `spatie/laravel-permission`: Rol ve yetki yönetimi
-- `spatie/laravel-medialibrary`: Medya yönetimi
-- `spatie/laravel-activitylog`: Sistem günlükleri
-- `barryvdh/laravel-dompdf`: PDF oluşturma
-- `maatwebsite/excel`: Excel işlemleri
-- `simplesoftwareio/simple-qrcode`: QR kod oluşturma
+**Highlighted Laravel Packages**
+- `spatie/laravel-permission`: Role and permission management
+- `spatie/laravel-medialibrary`: Media management
+- `spatie/laravel-activitylog`: Activity logging
+- `barryvdh/laravel-dompdf`: PDF generation
+- `maatwebsite/excel`: Excel operations
+- `simplesoftwareio/simple-qrcode`: QR code generation
 
-## ⚙️ Kurulum ve Çalıştırma
+## ⚙️ Installation and Setup
 
-Projeyi yerel ortamınızda çalıştırmak için aşağıdaki adımları izleyin:
+Follow these steps to run the project on your local environment:
 
-1. **Depoyu Klonlayın**
+1. **Clone the Repository**
    ```bash
    git clone https://github.com/AyberkCerit/smart-field-audit-system.git
    cd file_management_service
    ```
 
-2. **Bağımlılıkları Yükleyin**
+2. **Install Dependencies**
    ```bash
    composer install
    npm install
    ```
 
-3. **Çevre Değişkenlerini Ayarlayın**
+3. **Set Up Environment Variables**
    ```bash
    cp .env.example .env
    php artisan key:generate
    ```
-   `.env` dosyanızı açarak veritabanı ayarlarınızı (DB_*) kendi yerel sunucunuza göre yapılandırın.
+   Open your `.env` file and configure your database settings (DB_*) according to your local server.
 
-4. **Veritabanı Migrasyonları ve Sahte Veri (Seeder)**
-   Sistemin sorunsuz çalışması (Rollerin ve örnek verilerin oluşması) için veritabanını oluşturup seed etmeniz gerekir:
+4. **Database Migrations and Dummy Data (Seeder)**
+   To ensure the system works properly (creating roles and sample data), you need to migrate and seed the database:
    ```bash
    php artisan migrate --seed
    ```
-   *Not: Seed işlemi sonrasında `admin@sahadenetim.com` (şifre: password) hesabı ve çeşitli test verileri otomatik olarak oluşturulacaktır.*
+   *Note: After the seed process, an `admin@sahadenetim.com` (password: password) account and various test data will be created automatically.*
 
-5. **Uygulamayı Başlatın**
-   Sunucuyu ve frontend asset'lerini eşzamanlı olarak çalıştırmak için:
+5. **Start the Application**
+   To run the server and frontend assets concurrently:
    ```bash
    npm run dev
    php artisan serve
    ```
-   *İsteğe bağlı: E-posta ve asenkron bildirimler için `php artisan queue:listen` çalıştırılabilir.*
+   *Optional: Run `php artisan queue:listen` for email and asynchronous notifications.*
 
-## 🔒 Güvenlik Notları
+## 🔒 Security Notes
 
-- API ve dışa açık formlarda CSRF koruması aktiftir.
-- Rol bazlı yetkilendirmeler tüm Route yapılarında, Policy ve Controller seviyelerinde sıkı bir şekilde uygulanmıştır.
-- Canlı ortama çıkmadan önce `.env` dosyasındaki `APP_DEBUG` değerinin `false` olduğundan emin olun.
+- CSRF protection is active on APIs and public forms.
+- Role-based authorizations are strictly enforced across all Route structures, Policies, and Controllers.
+- Before deploying to a live environment, make sure the `APP_DEBUG` value in your `.env` file is set to `false`.
