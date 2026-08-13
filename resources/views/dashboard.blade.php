@@ -115,13 +115,13 @@
                         <div class="flex items-center -space-x-3 hover:space-x-1 transition-all duration-300 px-2 py-1 overflow-x-auto custom-scrollbar max-w-[250px] md:max-w-[400px]">
                             @foreach($chatUsers as $u)
                                 <button type="button" onclick="selectChatUser('{{ $u->id }}', this)" 
-                                        class="chat-user-avatar relative w-9 h-9 rounded-full border-2 border-card-dark bg-gradient-to-br from-primary/60 to-accent/60 flex-shrink-0 flex items-center justify-center hover:z-10 transition-all hover:scale-110 shadow-md group" 
+                                        class="chat-user-avatar flex items-center rounded-full border-2 border-card-dark bg-gradient-to-br from-primary/80 to-accent/80 flex-shrink-0 hover:z-10 transition-all duration-300 shadow-md group h-9" 
                                         title="{{ $u->name }}">
-                                    <span class="text-xs font-bold text-white tracking-wider">{{ strtoupper(substr($u->name, 0, 2)) }}</span>
-                                    
-                                    <!-- Tooltip -->
-                                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible bg-background border border-secondary/30 text-white text-[10px] px-2 py-1 rounded-md whitespace-nowrap transition-all pointer-events-none z-50 shadow-lg">
-                                        {{ $u->name }}
+                                    <div class="w-8 h-8 rounded-full flex flex-shrink-0 items-center justify-center">
+                                        <span class="text-xs font-bold text-white tracking-wider">{{ strtoupper(substr($u->name, 0, 2)) }}</span>
+                                    </div>
+                                    <div class="max-w-0 opacity-0 group-hover:max-w-[150px] group-hover:opacity-100 group-hover:pr-3 transition-all duration-300 overflow-hidden flex items-center h-full">
+                                        <span class="text-xs font-semibold text-white whitespace-nowrap">{{ $u->name }}</span>
                                     </div>
                                 </button>
                             @endforeach
