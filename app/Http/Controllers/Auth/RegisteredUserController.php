@@ -44,8 +44,12 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
         
-        $adminsAndManagers = User::role(['admin', 'manager'])->get();
-        \Illuminate\Support\Facades\Notification::send($adminsAndManagers, new \App\Notifications\NewUserNotification($user));
+        try {
+            $adminsAndManagers = User::role(['admin', 'manager'])->get();
+            \Illuminate\Support\Facades\Notification::send($adminsAndManagers, new \App\Notifications\NewUserNotification($user));
+        } catch (\Spatie\Permission\Exceptions\RoleDoesNotExist $e) {
+            // Ignore if roles haven't been seeded yet
+        }
 
         Auth::login($user);
 
